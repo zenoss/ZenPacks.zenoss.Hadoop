@@ -5,7 +5,6 @@
     xmlns:zcml="http://namespaces.zope.org/zcml"
     >
 
-
     <!-- Browser Resources -->
     <browser:resourceDirectory
         name="ZenPacks_zenoss_Hadoop"
@@ -25,12 +24,6 @@
 
 
     <!-- API: Info Adapters -->
-
-    For ZenPacks that add new datasource types you must register their Info
-    adapter(s). The info adapters provide the API that the web interface needs
-    to show information about each instance of your datasource type that is
-    created. The info adapters are also used to set the properties of the
-    datasource instances.
 
     <adapter
         provides=".HadoopServiceNode.IHadoopServiceNodeInfo"
