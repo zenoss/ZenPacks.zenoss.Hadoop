@@ -7,14 +7,18 @@
 # installed.
 #
 ######################################################################
+from zope.component import adapts
+from zope.interface import implements
 
 from Products.ZenModel.ManagedEntity import ManagedEntity
 from Products.ZenModel.ZenossSecurity import ZEN_CHANGE_DEVICE
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
 
+from Products.Zuul.form import schema
+from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.infos.component import ComponentInfo
 from Products.Zuul.interfaces.component import IComponentInfo
-from Products.Zuul.catalog.paths import DefaultPathReporter
+from Products.Zuul.utils import ZuulMessageFactory as _t
 
 from .HadoopComponent import HadoopComponent
 
@@ -22,43 +26,38 @@ from .HadoopComponent import HadoopComponent
 class HadoopServiceNode(HadoopComponent):
     meta_type = portal_type = "HadoopServiceNode"
 
-    attributeOne = None
-    attributeTwo = None
-	
-    # Explicit inheritence.
-    _properties = ManagedEntity._properties
-    _relations = ManagedEntity._relations
+    health_state = None
+    last_contacted = None
 
-    # Meta-data: Zope object views and actions
-    factory_type_information = ({
-        'actions': ({
-            'id': 'perfConf',
-            'name': 'Template',
-            'action': 'objTemplates',
-            'permissions': (ZEN_CHANGE_DEVICE,),
-        },),
-    },)
+    _properties = HadoopComponent._properties + (
+        {'id': 'health_state', 'type': 'string'},
+        {'id': 'last_contacted', 'type': 'string'},
+    )
 
-    # Custom components must always implement the device method. The method
-    # should return the device object that contains the component.
+    _relations = HadoopComponent._relations + (
+        ('hadoop_host', ToOne(
+            ToManyCont, 'Products.ZenModel.Device.Device', 'hadoop_service_nodes')),
+    )
+
     def device(self):
-        return self.exampleDevice()
+        return self.hadoop_host()
 
 
 class IHadoopServiceNodeInfo(IComponentInfo):
     '''
     API Info interface for HadoopServiceNode.
     '''
+    device = schema.Entity(title=_t(u'Device'))
+    health_state = schema.TextLine(title=_t(u'Health State'))
+    last_contacted = schema.TextLine(title=_t(u'Last Connected'))
 
 
 class HadoopServiceNodeInfo(ComponentInfo):
     '''
     API Info adapter factory for HadoopServiceNode.
     '''
+    implements(IHadoopServiceNodeInfo)
+    adapts(HadoopServiceNode)
 
-
-class HadoopServiceNodePathReporter(DefaultPathReporter):
-    ''' Path reporter for HadoopServiceNode.  '''
-
-    def getPaths(self):
-        return super(HadoopServiceNodePathReporter, self).getPaths()
+    health_state = ProxyProperty('health_state')
+    last_contacted = ProxyProperty('last_contacted')

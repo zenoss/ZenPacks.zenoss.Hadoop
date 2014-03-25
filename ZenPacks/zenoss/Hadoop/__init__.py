@@ -112,7 +112,7 @@ class ZenPack(ZenPackBase):
 
     def remove(self, app, leaveObjects=False):
         if not leaveObjects:
-            log.info('Removing MySqlMonitor components')
+            log.info('Removing Hadoop components')
             cat = ICatalogTool(app.zport.dmd)
             for brain in cat.search(types=NEW_COMPONENT_TYPES):
                 component = brain.getObject()
