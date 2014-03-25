@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:zcml="http://namespaces.zope.org/zcml">
+    xmlns:browser = "http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
 
 
-    <!-- Includes: Browser Configuration -->
-    <include package=".browser"/>
+    <!-- Browser Resources -->
+    <browser:resourceDirectory
+        name="ZenPacks_zenoss_Hadoop"
+        directory="resources"
+        />
+
+    <!-- JavaScript needed for all Zenoss pages. -->
+    <browser:viewlet
+        name="js-hadoop"
+        paths="/++resource++ZenPacks_zenoss_Hadoop/js/hadoop.js"
+        for="*"
+        weight="20"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
 
 
     <!-- API: Info Adapters -->
@@ -16,7 +32,7 @@
     created. The info adapters are also used to set the properties of the
     datasource instances.
 
-     <adapter
+    <adapter
         provides=".HadoopServiceNode.IHadoopServiceNodeInfo"
         for=".HadoopServiceNode.HadoopServiceNode"
         factory=".HadoopServiceNode.HadoopServiceNodeInfo"
