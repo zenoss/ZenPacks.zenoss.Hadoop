@@ -33,7 +33,7 @@ def add_obj(relationship, obj):
 
 def test_device(dmd, factor=1):
     """
-     Return an example SolarisMonitorDevice with a set of example components.
+     Return an example Device with a set of example components.
     """
 
     from ZenPacks.zenoss.Hadoop.HadoopDataNode import HadoopDataNode
