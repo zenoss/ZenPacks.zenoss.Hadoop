@@ -20,42 +20,36 @@ from ZenPacks.zenoss.Hadoop import MODULE_NAME
 from ZenPacks.zenoss.Hadoop.utils import NAME_SPLITTER
 
 
-class Hadoop(CommandPlugin):
+class HadoopServiceNode(CommandPlugin):
     """
-    A command plugin for Hadoop
+    A command plugin for Hadoop to look for Job Tracker / Secondary
+    Name nodes
     """
 
-    command = "/usr/bin/curl -i -s http://localhost:50070/jmx"
+    command = "/usr/bin/curl -i -s http://localhost:50070/conf"
 
     def process(self, device, results, log):
         log.info('Collecting Hadoop nodes for device %s' % device.id)
 
         maps = collections.OrderedDict([
             ('hadoop_service_nodes', []),
-            ('hadoop_data_nodes', []),
+            # ('hadoop_data_nodes', []),
         ])
 
         # TODO: add try ... except on below code to catch bad-data
 
-        #print results
+        print results
 
-        # Skip HTTP header
-        res = '\n'.join(results.split('\n')[4:]) 
+        # # Skip HTTP header if you plan to parse XML
+        # res = '\n'.join(results.split('\n')[4:])
 
-        data = json.loads(res)
         node_oms = []
-        for bean in data['beans']:
-            if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':
-                node_oms.extend(
-                    self._node_oms(bean["LiveNodes"], 'Normal'))
-                node_oms.extend(
-                    self._node_oms(bean["DeadNodes"], 'Dead'))
-                node_oms.extend(
-                    self._node_oms(bean["DecomNodes"], 'Decommissioned'))
 
-        maps['hadoop_data_nodes'].append(RelationshipMap(
-            relname='hadoop_data_nodes',
-            modname=MODULE_NAME['HadoopDataNode'],
+        # self._get_attr('mapred.job.tracker.http.address', results)
+
+        maps['hadoop_service_nodes'].append(RelationshipMap(
+            relname='hadoop_service_nodes',
+            modname=MODULE_NAME['HadoopServiceNode'],
             objmaps=node_oms))
 
         # Clear non-existing component events.
@@ -70,15 +64,10 @@ class Hadoop(CommandPlugin):
 
         return list(chain.from_iterable(maps.itervalues()))
 
-    def _node_oms(self, data, health_state):
-        """Builds node OMs"""
-        maps = []
-        nodes = json.loads(data)
-        for node_name, node_data in nodes.iteritems():
-            maps.append(ObjectMap({
-                'id': prepId(node_name),
-                'title': node_name,
-                'health_state': health_state,
-                'last_contacted': node_data['lastContact']
-            }))
-        return maps
+    def _get_attr(self, attr, val, default=""):
+        """Look for attribute in configuration"""
+        try:
+            res = re.search('%s (.+?)\n' % attr, val).group(1)
+            return res or default
+        except AttributeError:
+            return default
