@@ -7,7 +7,7 @@
 # 
 ##############################################################################
 
-
+import json
 import collections
 from itertools import chain
 import re
@@ -34,4 +34,30 @@ class Hadoop(CommandPlugin):
             ('hadoop_data_nodes', []),
         ])
 
+        # TODO: add try ... except on below code to catch bad-data
+
+        #print results
+
+        # Skip HTTP header
+        res = '\n'.join(results.split('\n')[4:]) 
+
+        data = json.loads(res)
+        for bean in data['beans']:
+            if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':
+                self._node_oms(maps, bean["LiveNodes"], 'Normal')
+                self._node_oms(maps, bean["DeadNodes"], 'Dead')
+                self._node_oms(maps, bean["DecomNodes"], 'Decommissioned')
+
         return list(chain.from_iterable(maps.itervalues()))
+
+    def _node_oms(self, maps, data, health_state):
+        """Builds node OMs"""
+
+        nodes = json.loads(data)
+        for node_name, node_data in nodes.iteritems():
+            maps['hadoop_data_nodes'].append(ObjectMap({
+                'id': prepId(node_name),
+                'title': node_name,
+                'health_state': health_state,
+                'last_contacted': node_data['lastContact']
+            }))
