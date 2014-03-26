@@ -16,6 +16,7 @@ from Products.ZenUtils.Utils import prepId
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
 from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin
 
+from ZenPacks.zenoss.Hadoop import MODULE_NAME
 from ZenPacks.zenoss.Hadoop.utils import NAME_SPLITTER
 
 
@@ -24,7 +25,7 @@ class Hadoop(CommandPlugin):
     A command plugin for Hadoop
     """
 
-    command = "/usr/bin/curl -i http://localhost:50070/jmx"
+    command = "/usr/bin/curl -i -s http://localhost:50070/jmx"
 
     def process(self, device, results, log):
         log.info('Collecting Hadoop nodes for device %s' % device.id)
@@ -42,22 +43,42 @@ class Hadoop(CommandPlugin):
         res = '\n'.join(results.split('\n')[4:]) 
 
         data = json.loads(res)
+        node_oms = []
         for bean in data['beans']:
             if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':
-                self._node_oms(maps, bean["LiveNodes"], 'Normal')
-                self._node_oms(maps, bean["DeadNodes"], 'Dead')
-                self._node_oms(maps, bean["DecomNodes"], 'Decommissioned')
+                node_oms.extend(
+                    self._node_oms(bean["LiveNodes"], 'Normal'))
+                node_oms.extend(
+                    self._node_oms(bean["DeadNodes"], 'Dead'))
+                node_oms.extend(
+                    self._node_oms(bean["DecomNodes"], 'Decommissioned'))
+
+        maps['hadoop_data_nodes'].append(RelationshipMap(
+            relname='hadoop_data_nodes',
+            modname=MODULE_NAME['HadoopDataNode'],
+            objmaps=node_oms))
+
+        # Clear non-existing component events.
+        # maps['device'].append(ObjectMap({
+        #     'getClearEvents': True
+        # }))
+
+        log.info(
+            'Modeler %s finished processing data for device %s',
+            self.name(), device.id
+        )
 
         return list(chain.from_iterable(maps.itervalues()))
 
-    def _node_oms(self, maps, data, health_state):
+    def _node_oms(self, data, health_state):
         """Builds node OMs"""
-
+        maps = []
         nodes = json.loads(data)
         for node_name, node_data in nodes.iteritems():
-            maps['hadoop_data_nodes'].append(ObjectMap({
+            maps.append(ObjectMap({
                 'id': prepId(node_name),
                 'title': node_name,
                 'health_state': health_state,
                 'last_contacted': node_data['lastContact']
             }))
+        return maps
