@@ -1,3 +1,480 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <objects>
+  <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'Hadoop') -->
+  <object class="RRDTemplate" id="/zport/dmd/Devices/rrdTemplates/Hadoop" module="Products.ZenModel.RRDTemplate">
+    <property id="targetPythonClass" mode="w" type="string">
+      Products.ZenModel.Device
+    </property>
+    <tomanycont id="datasources">
+      <object class="BasicDataSource" id="HadoopMonitor" module="Products.ZenModel.BasicDataSource">
+        <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
+          COMMAND
+        </property>
+        <property id="enabled" mode="w" type="boolean">
+          True
+        </property>
+        <property id="component" mode="w" type="string">
+          None
+        </property>
+        <property id="eventClass" mode="w" type="string">
+          /Cmd/Fail
+        </property>
+        <property id="severity" mode="w" type="int">
+          2
+        </property>
+        <property id="commandTemplate" mode="w" type="string">
+          /usr/bin/curl -s http://localhost:50030/jmx
+        </property>
+        <property id="cycletime" mode="w" type="int">
+          300
+        </property>
+        <property id="usessh" mode="w" type="boolean">
+          True
+        </property>
+        <property id="parser" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        </property>
+        <tomanycont id="datapoints">
+          <object class="RRDDataPoint" id="blocks_capacity" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="blocks_corrupted" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="blocks_missing" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="blocks_total" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="dead_nodes_count" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="disk_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="disk_free_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="disk_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="live_nodes_count" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="non_dfs_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="non_heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="non_heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="threads" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="total_files" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+        </tomanycont>
+      </object>
+    </tomanycont>
+  </object>
+  <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'HadoopDataNode') -->
+  <object class="RRDTemplate" id="/zport/dmd/Devices/rrdTemplates/HadoopDataNode" module="Products.ZenModel.RRDTemplate">
+    <property id="targetPythonClass" mode="w" type="string">
+      Products.ZenModel.Device
+    </property>
+    <tomanycont id="datasources">
+      <object class="BasicDataSource" id="HadoopDataNodeMonitor" module="Products.ZenModel.BasicDataSource">
+        <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
+          COMMAND
+        </property>
+        <property id="enabled" mode="w" type="boolean">
+          True
+        </property>
+        <property id="component" mode="w" type="string">
+          ${here/id}
+        </property>
+        <property id="eventClass" mode="w" type="string">
+          /Cmd/Fail
+        </property>
+        <property id="severity" mode="w" type="int">
+          3
+        </property>
+        <property id="commandTemplate" mode="w" type="string">
+          /usr/bin/curl -s http://localhost:50070/jmx
+        </property>
+        <property id="cycletime" mode="w" type="int">
+          300
+        </property>
+        <property id="usessh" mode="w" type="boolean">
+          True
+        </property>
+        <property id="parser" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        </property>
+        <tomanycont id="datapoints">
+          <object class="RRDDataPoint" id="block_read" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="blocks_written" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="bytes_read" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="bytes_written" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="disk_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="disk_free_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="disk_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="maps_completed" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="maps_failed" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="maps_launched" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="non_heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="non_heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="reduces_completed" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="reduces_failed" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="reduces_launched" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+        </tomanycont>
+      </object>
+    </tomanycont>
+  </object>
+  <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'HadoopServiceNode') -->
+  <object class="RRDTemplate" id="/zport/dmd/Devices/rrdTemplates/HadoopServiceNode" module="Products.ZenModel.RRDTemplate">
+    <property id="targetPythonClass" mode="w" type="string">
+      Products.ZenModel.Device
+    </property>
+    <tomanycont id="datasources">
+      <object class="BasicDataSource" id="HadoopServiceNodeMonitor" module="Products.ZenModel.BasicDataSource">
+        <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
+          COMMAND
+        </property>
+        <property id="enabled" mode="w" type="boolean">
+          True
+        </property>
+        <property id="component" mode="w" type="string">
+          ${here/id}
+        </property>
+        <property id="eventClass" mode="w" type="string">
+          /Cmd/Fail
+        </property>
+        <property id="severity" mode="w" type="int">
+          2
+        </property>
+        <property id="commandTemplate" mode="w" type="string">
+          /usr/bin/curl -s http://localhost:50060/jmx
+        </property>
+        <property id="cycletime" mode="w" type="int">
+          300
+        </property>
+        <property id="usessh" mode="w" type="boolean">
+          True
+        </property>
+        <property id="parser" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        </property>
+        <tomanycont id="datapoints">
+          <object class="RRDDataPoint" id="disk_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="disk_free_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="disk_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="maps_running" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="non_heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="non_heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="reduces_running" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="tasks_completed" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="tasks_failed" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="tasks_running" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+        </tomanycont>
+      </object>
+    </tomanycont>
+  </object>
 </objects>
