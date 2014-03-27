@@ -16,7 +16,7 @@
         name="js-hadoop"
         paths="/++resource++ZenPacks_zenoss_Hadoop/js/hadoop.js"
         for="*"
-        weight="20"
+        weight="10"
         manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
         class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
         permission="zope2.Public"
