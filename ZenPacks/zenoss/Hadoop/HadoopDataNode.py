@@ -49,7 +49,7 @@ class IHadoopDataNodeInfo(IComponentInfo):
     '''
     device = schema.Entity(title=_t(u'Device'))
     health_state = schema.TextLine(title=_t(u'Health State'))
-    last_contacted = schema.TextLine(title=_t(u'Last Connected'))
+    last_contacted = schema.TextLine(title=_t(u'Last Contacted'))
 
 
 class HadoopDataNodeInfo(ComponentInfo):
