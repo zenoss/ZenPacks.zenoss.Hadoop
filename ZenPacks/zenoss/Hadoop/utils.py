@@ -11,3 +11,8 @@
 
 # Useful for components' ids.
 NAME_SPLITTER = '(.)'
+
+
+NODE_HEALTH_NORMAL = 'Normal'
+NODE_HEALTH_DEAD = 'Dead'
+NODE_HEALTH_DECOM = 'Decommissioned'

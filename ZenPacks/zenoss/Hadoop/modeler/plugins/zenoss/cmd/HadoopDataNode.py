@@ -17,7 +17,8 @@ from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
 from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin
 
 from ZenPacks.zenoss.Hadoop import MODULE_NAME
-from ZenPacks.zenoss.Hadoop.utils import NAME_SPLITTER
+from ZenPacks.zenoss.Hadoop.utils import NAME_SPLITTER, NODE_HEALTH_NORMAL, \
+    NODE_HEALTH_DEAD, NODE_HEALTH_DECOM
 
 
 class HadoopDataNode(CommandPlugin):
@@ -46,12 +47,15 @@ class HadoopDataNode(CommandPlugin):
         node_oms = []
         for bean in data['beans']:
             if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':
+                log.debug('Collecting live nodes')
                 node_oms.extend(
-                    self._node_oms(bean["LiveNodes"], 'Normal'))
+                    self._node_oms(log, bean["LiveNodes"], NODE_HEALTH_NORMAL))
+                log.debug('Collecting dead nodes')
                 node_oms.extend(
-                    self._node_oms(bean["DeadNodes"], 'Dead'))
+                    self._node_oms(log, bean["DeadNodes"], NODE_HEALTH_DEAD))
+                log.debug('Collecting decommissioned nodes')
                 node_oms.extend(
-                    self._node_oms(bean["DecomNodes"], 'Decommissioned'))
+                    self._node_oms(log, bean["DecomNodes"], NODE_HEALTH_DECOM))
 
         maps['hadoop_data_nodes'].append(RelationshipMap(
             relname='hadoop_data_nodes',
@@ -70,11 +74,12 @@ class HadoopDataNode(CommandPlugin):
 
         return list(chain.from_iterable(maps.itervalues()))
 
-    def _node_oms(self, data, health_state):
+    def _node_oms(self, log, data, health_state):
         """Builds node OMs"""
         maps = []
         nodes = json.loads(data)
         for node_name, node_data in nodes.iteritems():
+            log.debug(node_name)
             maps.append(ObjectMap({
                 'id': prepId(node_name),
                 'title': node_name,

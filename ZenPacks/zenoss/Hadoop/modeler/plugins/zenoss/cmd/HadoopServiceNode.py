@@ -38,14 +38,30 @@ class HadoopServiceNode(CommandPlugin):
 
         # TODO: add try ... except on below code to catch bad-data
 
-        print results
+        # print results
 
         # # Skip HTTP header if you plan to parse XML
         # res = '\n'.join(results.split('\n')[4:])
 
         node_oms = []
 
-        # self._get_attr('mapred.job.tracker.http.address', results)
+        jobtracker = self._get_attr('mapred.job.tracker.http.address', results)
+        log.debug('Jobtracker Node: %s' % jobtracker)
+        if jobtracker:
+            node_oms.append(ObjectMap({
+                'id': prepId(jobtracker),
+                'title': jobtracker,
+                'node_type': 'Job Tracker',
+            }))
+
+        secondary = self._get_attr('dfs.secondary.http.address', results)
+        log.debug('Secondary Name Node: %s' % secondary)
+        if secondary:
+            node_oms.append(ObjectMap({
+                'id': prepId(secondary),
+                'title': secondary,
+                'node_type': 'Secondary Name Node',
+            }))
 
         maps['hadoop_service_nodes'].append(RelationshipMap(
             relname='hadoop_service_nodes',
@@ -67,7 +83,7 @@ class HadoopServiceNode(CommandPlugin):
     def _get_attr(self, attr, val, default=""):
         """Look for attribute in configuration"""
         try:
-            res = re.search('%s (.+?)\n' % attr, val).group(1)
+            res = re.search('<name>%s</name><value>(.+?)</value>' % attr, val).group(1)
             return res or default
         except AttributeError:
             return default
