@@ -18,6 +18,8 @@ from .HadoopServiceNode import HadoopServiceNode, IHadoopServiceNodeInfo, \
 
 
 class HadoopJobTracker(HadoopServiceNode):
+    meta_type = portal_type = "HadoopJobTracker"
+
     _relations = HadoopServiceNode._relations + (
         ('hadoop_host', ToOne(
             ToManyCont, 'Products.ZenModel.Device.Device', 'hadoop_job_tracker')),

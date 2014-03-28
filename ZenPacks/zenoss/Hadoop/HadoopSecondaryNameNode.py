@@ -18,6 +18,8 @@ from .HadoopServiceNode import HadoopServiceNode, IHadoopServiceNodeInfo, \
 
 
 class HadoopSecondaryNameNode(HadoopServiceNode):
+    meta_type = portal_type = "HadoopSecondaryNameNode"
+
     _relations = HadoopServiceNode._relations + (
         ('hadoop_host', ToOne(
             ToManyCont, 'Products.ZenModel.Device.Device', 'hadoop_secondary_name_node')),
