@@ -151,7 +151,6 @@ ZC.HadoopHadoopJobTrackerPanel = Ext.extend(ZC.ComponentGridPanel, {
 });
 Ext.reg('HadoopHadoopJobTrackerPanel', ZC.HadoopHadoopJobTrackerPanel);
 
-
 /* HadoopSecondaryNameNode */
 ZC.HadoopSecondaryNameNodePanel = Ext.extend(ZC.ComponentGridPanel, {
     subComponentGridPanel: false,
@@ -218,9 +217,9 @@ ZC.HadoopSecondaryNameNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 width: 60
             }]
         });
-        ZC.HadoopSecondaryNameNode.superclass.constructor.call(this, config);
+        ZC.HadoopSecondaryNameNodePanel.superclass.constructor.call(this, config);
     }
 });
-Ext.reg('HadoopSecondaryNameNode', ZC.HadoopSecondaryNameNode);
+Ext.reg('HadoopSecondaryNameNodePanel', ZC.HadoopSecondaryNameNodePanel);
 
 })();
