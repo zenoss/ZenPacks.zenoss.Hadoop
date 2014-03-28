@@ -32,42 +32,46 @@ class HadoopServiceNode(CommandPlugin):
         log.info('Collecting Hadoop nodes for device %s' % device.id)
 
         maps = collections.OrderedDict([
-            ('hadoop_service_nodes', []),
-            # ('hadoop_data_nodes', []),
+            ('hadoop_job_tracker', []),
+            ('hadoop_secondary_name_node', []),
         ])
 
         # TODO: add try ... except on below code to catch bad-data
 
         # print results
 
-        node_oms = []
-
         jobtracker = self._prep_ip(device,
             self._get_attr('mapred.job.tracker.http.address', results)
         )
         log.debug('Jobtracker Node: %s' % jobtracker)
         if jobtracker:
-            node_oms.append(ObjectMap({
-                'id': prepId(jobtracker),
-                'title': jobtracker,
-                'node_type': 'Job Tracker',
-            }))
+            maps['hadoop_job_tracker'].append(RelationshipMap(
+                relname='hadoop_job_tracker',
+                modname=MODULE_NAME['HadoopJobTracker'],
+                objmaps=[
+                    ObjectMap({
+                        'id': prepId(jobtracker),
+                        'title': jobtracker,
+                        'node_type': 'Job Tracker',
+                    })
+                ]))
+
 
         secondary = self._prep_ip(device,
             self._get_attr('dfs.secondary.http.address', results)
         )
         log.debug('Secondary Name Node: %s' % secondary)
         if secondary:
-            node_oms.append(ObjectMap({
-                'id': prepId(secondary),
-                'title': secondary,
-                'node_type': 'Secondary Name Node',
-            }))
-
-        maps['hadoop_service_nodes'].append(RelationshipMap(
-            relname='hadoop_service_nodes',
-            modname=MODULE_NAME['HadoopServiceNode'],
-            objmaps=node_oms))
+            maps['hadoop_secondary_name_node'].append(RelationshipMap(
+                relname='hadoop_secondary_name_node',
+                modname=MODULE_NAME['HadoopSecondaryNameNode'],
+                objmaps=[
+                    ObjectMap({
+                        'id': prepId(secondary),
+                        'title': secondary,
+                        'node_type': 'Secondary Name Node',
+                    })
+                ]))
 
         # Clear non-existing component events.
         # maps['device'].append(ObjectMap({

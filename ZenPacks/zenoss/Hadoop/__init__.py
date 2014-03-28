@@ -33,7 +33,8 @@ setzPropertyCategory('zHadoop', 'Hadoop')
 # Modules containing model classes. Used by zenchkschema to validate
 # bidirectional integrity of defined relationships.
 productNames = (
-    'HadoopServiceNode',
+    'HadoopJobTracker',
+    'HadoopSecondaryNameNode',
     'HadoopDataNode'
     )
 
@@ -48,12 +49,14 @@ for product_name in productNames:
 
 # Define new device relations.
 NEW_DEVICE_RELATIONS = (
-    ('hadoop_service_nodes', 'HadoopServiceNode'),
+    ('hadoop_job_tracker', 'HadoopJobTracker'),
+    ('hadoop_secondary_name_node', 'HadoopSecondaryNameNode'),
     ('hadoop_data_nodes', 'HadoopDataNode'),
     )
 
 NEW_COMPONENT_TYPES = (
-    'ZenPacks.zenoss.Hadoop.HadoopServiceNode.HadoopServiceNode',
+    'ZenPacks.zenoss.Hadoop.HadoopJobTracker.HadoopJobTracker',
+    'ZenPacks.zenoss.Hadoop.HadoopSecondaryNameNode.HadoopSecondaryNameNode',
     'ZenPacks.zenoss.Hadoop.HadoopDataNode.HadoopDataNode',
     )
 

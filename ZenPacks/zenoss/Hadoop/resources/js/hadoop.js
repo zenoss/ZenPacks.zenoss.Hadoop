@@ -12,7 +12,8 @@ var ZC = Ext.ns('Zenoss.component');
 var ZD = Ext.ns('Zenoss.devices');
 
 ZC.registerName('HadoopDataNode', _t('Hadoop Data Node'), _t('Hadoop Data Nodes'));
-ZC.registerName('HadoopServiceNode', _t('Hadoop Service Node'), _t('Hadoop Service Nodes'));
+ZC.registerName('HadoopJobTracker', _t('Hadoop Job Tracker'), _t('Hadoop Job Trackers'));
+ZC.registerName('HadoopSecondaryNameNode', _t('Hadoop Secondary Name Node'), _t('Hadoop Secondary Name Nodes'));
 
 /* HadoopDataNode */
 ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
@@ -79,14 +80,14 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
 });
 Ext.reg('HadoopDataNodePanel', ZC.HadoopDataNodePanel);
 
-/* HadoopServiceNode */
-ZC.HadoopServiceNodePanel = Ext.extend(ZC.ComponentGridPanel, {
+/* HadoopJobTracker */
+ZC.HadoopHadoopJobTrackerPanel = Ext.extend(ZC.ComponentGridPanel, {
     subComponentGridPanel: false,
 
     constructor: function(config) {
         config = Ext.applyIf(config||{}, {
             autoExpandColumn: 'name',
-            componentType: 'HadoopServiceNode',
+            componentType: 'HadoopJobTracker',
             fields: [
                 {name: 'uid'},
                 {name: 'name'},
@@ -145,9 +146,81 @@ ZC.HadoopServiceNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 width: 60
             }]
         });
-        ZC.HadoopServiceNodePanel.superclass.constructor.call(this, config);
+        ZC.HadoopHadoopJobTrackerPanel.superclass.constructor.call(this, config);
     }
 });
-Ext.reg('HadoopServiceNodePanel', ZC.HadoopServiceNodePanel);
+Ext.reg('HadoopHadoopJobTrackerPanel', ZC.HadoopHadoopJobTrackerPanel);
+
+
+/* HadoopSecondaryNameNode */
+ZC.HadoopSecondaryNameNodePanel = Ext.extend(ZC.ComponentGridPanel, {
+    subComponentGridPanel: false,
+
+    constructor: function(config) {
+        config = Ext.applyIf(config||{}, {
+            autoExpandColumn: 'name',
+            componentType: 'HadoopSecondaryNameNode',
+            fields: [
+                {name: 'uid'},
+                {name: 'name'},
+                {name: 'status'},
+                {name: 'severity'},
+                {name: 'usesMonitorAttribute'},
+                {name: 'monitor'},
+                {name: 'monitored'},
+                {name: 'locking'},
+                {name: 'node_type'},
+                {name: 'last_contacted'},
+                {name: 'health_state'},
+            ],
+            columns: [{
+                id: 'severity',
+                dataIndex: 'severity',
+                header: _t('Events'),
+                renderer: Zenoss.render.severity,
+                width: 50
+            },{
+                id: 'node_type',
+                dataIndex: 'node_type',
+                header: _t('Node Type'),
+                width: 150
+            },{
+                id: 'name',
+                dataIndex: 'name',
+                header: _t('Name'),
+            },{
+                id: 'last_contacted',
+                dataIndex: 'last_contacted',
+                header: _t('Last Contacted'),
+                width: 100
+            },{
+                id: 'health_state',
+                dataIndex: 'health_state',
+                header: _t('Health State'),
+                width: 80
+            },{
+                id: 'status',
+                dataIndex: 'status',
+                header: _t('Status'),
+                renderer: Zenoss.render.pingStatus,
+                width: 60
+            },{
+                id: 'monitored',
+                dataIndex: 'monitored',
+                header: _t('Monitored'),
+                renderer: Zenoss.render.checkbox,
+                width: 60
+            },{
+                id: 'locking',
+                dataIndex: 'locking',
+                header: _t('Locking'),
+                renderer: Zenoss.render.locking_icons,
+                width: 60
+            }]
+        });
+        ZC.HadoopSecondaryNameNode.superclass.constructor.call(this, config);
+    }
+});
+Ext.reg('HadoopSecondaryNameNode', ZC.HadoopSecondaryNameNode);
 
 })();

@@ -36,11 +36,6 @@ class HadoopServiceNode(HadoopComponent):
         {'id': 'last_contacted', 'type': 'string'},
     )
 
-    _relations = HadoopComponent._relations + (
-        ('hadoop_host', ToOne(
-            ToManyCont, 'Products.ZenModel.Device.Device', 'hadoop_service_nodes')),
-    )
-
     def device(self):
         return self.hadoop_host()
 

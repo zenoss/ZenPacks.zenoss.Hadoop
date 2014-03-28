@@ -26,9 +26,15 @@
     <!-- API: Info Adapters -->
 
     <adapter
-        provides=".HadoopServiceNode.IHadoopServiceNodeInfo"
-        for=".HadoopServiceNode.HadoopServiceNode"
-        factory=".HadoopServiceNode.HadoopServiceNodeInfo"
+        provides=".HadoopJobTracker.IHadoopJobTrackerInfo"
+        for=".HadoopJobTracker.HadoopJobTracker"
+        factory=".HadoopJobTracker.HadoopJobTrackerInfo"
+        />
+
+    <adapter
+        provides=".HadoopSecondaryNameNode.IHadoopSecondaryNameNodeInfo"
+        for=".HadoopSecondaryNameNode.HadoopSecondaryNameNode"
+        factory=".HadoopSecondaryNameNode.HadoopSecondaryNameNodeInfo"
         />
 
     <adapter
