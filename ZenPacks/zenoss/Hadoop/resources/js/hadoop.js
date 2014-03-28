@@ -81,7 +81,7 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
 Ext.reg('HadoopDataNodePanel', ZC.HadoopDataNodePanel);
 
 /* HadoopJobTracker */
-ZC.HadoopHadoopJobTrackerPanel = Ext.extend(ZC.ComponentGridPanel, {
+ZC.HadoopJobTrackerPanel = Ext.extend(ZC.ComponentGridPanel, {
     subComponentGridPanel: false,
 
     constructor: function(config) {
@@ -107,11 +107,11 @@ ZC.HadoopHadoopJobTrackerPanel = Ext.extend(ZC.ComponentGridPanel, {
                 header: _t('Events'),
                 renderer: Zenoss.render.severity,
                 width: 50
-            },{
-                id: 'node_type',
-                dataIndex: 'node_type',
-                header: _t('Node Type'),
-                width: 150
+            // },{
+            //     id: 'node_type',
+            //     dataIndex: 'node_type',
+            //     header: _t('Node Type'),
+            //     width: 150
             },{
                 id: 'name',
                 dataIndex: 'name',
@@ -146,10 +146,10 @@ ZC.HadoopHadoopJobTrackerPanel = Ext.extend(ZC.ComponentGridPanel, {
                 width: 60
             }]
         });
-        ZC.HadoopHadoopJobTrackerPanel.superclass.constructor.call(this, config);
+        ZC.HadoopJobTrackerPanel.superclass.constructor.call(this, config);
     }
 });
-Ext.reg('HadoopHadoopJobTrackerPanel', ZC.HadoopHadoopJobTrackerPanel);
+Ext.reg('HadoopJobTrackerPanel', ZC.HadoopJobTrackerPanel);
 
 /* HadoopSecondaryNameNode */
 ZC.HadoopSecondaryNameNodePanel = Ext.extend(ZC.ComponentGridPanel, {
@@ -178,11 +178,11 @@ ZC.HadoopSecondaryNameNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 header: _t('Events'),
                 renderer: Zenoss.render.severity,
                 width: 50
-            },{
-                id: 'node_type',
-                dataIndex: 'node_type',
-                header: _t('Node Type'),
-                width: 150
+            // },{
+            //     id: 'node_type',
+            //     dataIndex: 'node_type',
+            //     header: _t('Node Type'),
+            //     width: 150
             },{
                 id: 'name',
                 dataIndex: 'name',
