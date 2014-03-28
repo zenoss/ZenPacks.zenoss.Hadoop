@@ -1,480 +1,1923 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <objects>
-  <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'Hadoop') -->
-  <object class="RRDTemplate" id="/zport/dmd/Devices/rrdTemplates/Hadoop" module="Products.ZenModel.RRDTemplate">
-    <property id="targetPythonClass" mode="w" type="string">
-      Products.ZenModel.Device
-    </property>
-    <tomanycont id="datasources">
-      <object class="BasicDataSource" id="HadoopMonitor" module="Products.ZenModel.BasicDataSource">
-        <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
-        </property>
-        <property id="enabled" mode="w" type="boolean">
-          True
-        </property>
-        <property id="component" mode="w" type="string">
-          None
-        </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
-        <property id="severity" mode="w" type="int">
-          2
-        </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://localhost:50030/jmx
-        </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
-        </property>
-        <tomanycont id="datapoints">
-          <object class="RRDDataPoint" id="blocks_capacity" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="blocks_corrupted" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="blocks_missing" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="blocks_total" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="dead_nodes_count" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="disk_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="disk_free_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="disk_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="live_nodes_count" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="non_dfs_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="non_heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="non_heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="threads" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="total_files" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-        </tomanycont>
-      </object>
-    </tomanycont>
-  </object>
-  <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'HadoopDataNode') -->
-  <object class="RRDTemplate" id="/zport/dmd/Devices/rrdTemplates/HadoopDataNode" module="Products.ZenModel.RRDTemplate">
-    <property id="targetPythonClass" mode="w" type="string">
-      Products.ZenModel.Device
-    </property>
-    <tomanycont id="datasources">
-      <object class="BasicDataSource" id="HadoopDataNodeMonitor" module="Products.ZenModel.BasicDataSource">
-        <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
-        </property>
-        <property id="enabled" mode="w" type="boolean">
-          True
-        </property>
-        <property id="component" mode="w" type="string">
-          ${here/id}
-        </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
-        <property id="severity" mode="w" type="int">
-          3
-        </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://localhost:50070/jmx
-        </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
-        </property>
-        <tomanycont id="datapoints">
-          <object class="RRDDataPoint" id="block_read" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="blocks_written" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="bytes_read" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="bytes_written" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="disk_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="disk_free_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="disk_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="maps_completed" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="maps_failed" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="maps_launched" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="non_heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="non_heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="reduces_completed" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="reduces_failed" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="reduces_launched" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-        </tomanycont>
-      </object>
-    </tomanycont>
-  </object>
-  <!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'HadoopServiceNode') -->
-  <object class="RRDTemplate" id="/zport/dmd/Devices/rrdTemplates/HadoopServiceNode" module="Products.ZenModel.RRDTemplate">
-    <property id="targetPythonClass" mode="w" type="string">
-      Products.ZenModel.Device
-    </property>
-    <tomanycont id="datasources">
-      <object class="BasicDataSource" id="HadoopServiceNodeMonitor" module="Products.ZenModel.BasicDataSource">
-        <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
-        </property>
-        <property id="enabled" mode="w" type="boolean">
-          True
-        </property>
-        <property id="component" mode="w" type="string">
-          ${here/id}
-        </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
-        <property id="severity" mode="w" type="int">
-          2
-        </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://localhost:50060/jmx
-        </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
-        </property>
-        <tomanycont id="datapoints">
-          <object class="RRDDataPoint" id="disk_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="disk_free_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="disk_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="maps_running" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="non_heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="non_heap_memory_used_bytes" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="reduces_running" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="tasks_completed" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="tasks_failed" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-          <object class="RRDDataPoint" id="tasks_running" module="Products.ZenModel.RRDDataPoint">
-            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
-              GAUGE
-            </property>
-            <property id="isrow" mode="w" type="boolean">
-              True
-            </property>
-          </object>
-        </tomanycont>
-      </object>
-    </tomanycont>
-  </object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'Hadoop') -->
+<object id='/zport/dmd/Devices/rrdTemplates/Hadoop' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="string" id="targetPythonClass" mode="w" >
+Products.ZenModel.Device
+</property>
+<tomanycont id='datasources'>
+<object id='NameNodeMonitor' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="component" mode="w" >
+None
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Cmd/Fail
+</property>
+<property type="int" id="severity" mode="w" >
+2
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/usr/bin/curl -s http://localhost:50070/jmx
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+</property>
+<tomanycont id='datapoints'>
+<object id='dead_nodes_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='heap_memory_capacity_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='heap_memory_used_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='live_nodes_count' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='non_heap_memory_capacity_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='non_heap_memory_used_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='threads' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='total_files' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+<tomanycont id='graphDefs'>
+<object id='Files' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+4
+</property>
+<tomanycont id='graphPoints'>
+<object id='total_files' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+NameNodeMonitor_total_files
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Heap Memory' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<tomanycont id='graphPoints'>
+<object id='heap_memory_capacity_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+NameNodeMonitor_heap_memory_capacity_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='heap_memory_used_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+NameNodeMonitor_heap_memory_used_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Nodes' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<tomanycont id='graphPoints'>
+<object id='dead_nodes_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+NameNodeMonitor_dead_nodes_count
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='live_nodes_count' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+NameNodeMonitor_live_nodes_count
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Non Heap Memory' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<tomanycont id='graphPoints'>
+<object id='non_heap_memory_capacity_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+NameNodeMonitor_non_heap_memory_capacity_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='non_heap_memory_used_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+NameNodeMonitor_non_heap_memory_used_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Threads' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+3
+</property>
+<tomanycont id='graphPoints'>
+<object id='threads' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+NameNodeMonitor_threads
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+</object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'HadoopDataNode') -->
+<object id='/zport/dmd/Devices/rrdTemplates/HadoopDataNode' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="string" id="targetPythonClass" mode="w" >
+Products.ZenModel.Device
+</property>
+<tomanycont id='datasources'>
+<object id='DataNodeMonitor' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Cmd/Fail
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/usr/bin/curl -s http://${here/title}:50075/jmx
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+</property>
+<tomanycont id='datapoints'>
+<object id='blocks_read' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='blocks_removed' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='blocks_written' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='heap_memory_capacity_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='heap_memory_used_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='non_heap_memory_capacity_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='non_heap_memory_used_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='TaskTrackerMonitor' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Cmd/Fail
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/usr/bin/curl -s http://${here/title}:50060/jmx
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+</property>
+<tomanycont id='datapoints'>
+<object id='maps_running' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='reduces_running' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='tasks_completed' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='tasks_failed_ping' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='tasks_failed_timeout' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+<tomanycont id='graphDefs'>
+<object id='Blocks' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<tomanycont id='graphPoints'>
+<object id='blocks_read' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+DataNodeMonitor_blocks_read
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='blocks_removed' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+DataNodeMonitor_blocks_removed
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='blocks_written' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+DataNodeMonitor_blocks_written
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Heap Memory' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<tomanycont id='graphPoints'>
+<object id='heap_memory_capacity_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+DataNodeMonitor_heap_memory_capacity_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='heap_memory_used_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+DataNodeMonitor_heap_memory_used_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Maps' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+3
+</property>
+<tomanycont id='graphPoints'>
+<object id='maps_running' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+TaskTrackerMonitor_maps_running
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Non Heap Memory' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<tomanycont id='graphPoints'>
+<object id='non_heap_memory_capacity_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+DataNodeMonitor_non_heap_memory_capacity_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='non_heap_memory_used_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+DataNodeMonitor_non_heap_memory_used_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Reduces' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<tomanycont id='graphPoints'>
+<object id='reduces_running' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+TaskTrackerMonitor_reduces_running
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Tasks' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<tomanycont id='graphPoints'>
+<object id='tasks_completed' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+TaskTrackerMonitor_tasks_completed
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='tasks_failed_ping' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+TaskTrackerMonitor_tasks_failed_ping
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='tasks_failed_timeout' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+TaskTrackerMonitor_tasks_failed_timeout
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+</object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'HadoopJobTracker') -->
+<object id='/zport/dmd/Devices/rrdTemplates/HadoopJobTracker' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="string" id="targetPythonClass" mode="w" >
+Products.ZenModel.Device
+</property>
+<tomanycont id='datasources'>
+<object id='JobTrackerMonitor' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Cmd/Fail
+</property>
+<property type="int" id="severity" mode="w" >
+2
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/usr/bin/curl -s http://${here/title}/jmx
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+</property>
+<tomanycont id='datapoints'>
+<object id='heap_memory_capacity_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='heap_memory_used_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='jobs_completed' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='jobs_failed' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='jobs_running' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='non_heap_memory_capacity_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='non_heap_memory_used_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='running_maps' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='running_reduces' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+<tomanycont id='graphDefs'>
+<object id='Heap Memory' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<tomanycont id='graphPoints'>
+<object id='heap_memory_capacity_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_heap_memory_capacity_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='heap_memory_used_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_heap_memory_used_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Jobs' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<tomanycont id='graphPoints'>
+<object id='jobs_completed' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+2
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_jobs_completed
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='jobs_failed' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_jobs_failed
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='jobs_running' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_jobs_running
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Maps' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+3
+</property>
+<tomanycont id='graphPoints'>
+<object id='running_maps' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_running_maps
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Non Heap Memory' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<tomanycont id='graphPoints'>
+<object id='non_heap_memory_capacity_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_non_heap_memory_capacity_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='non_heap_memory_used_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_non_heap_memory_used_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Reduces' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+4
+</property>
+<tomanycont id='graphPoints'>
+<object id='running_reduces' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+JobTrackerMonitor_running_reduces
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+</object>
+<!-- ('', 'zport', 'dmd', 'Devices', 'rrdTemplates', 'HadoopSecondaryNameNode') -->
+<object id='/zport/dmd/Devices/rrdTemplates/HadoopSecondaryNameNode' module='Products.ZenModel.RRDTemplate' class='RRDTemplate'>
+<property type="string" id="targetPythonClass" mode="w" >
+Products.ZenModel.Device
+</property>
+<tomanycont id='datasources'>
+<object id='SecondaryNameNodeMonitor' module='Products.ZenModel.BasicDataSource' class='BasicDataSource'>
+<property select_variable="sourcetypes" type="selection" id="sourcetype" mode="w" >
+COMMAND
+</property>
+<property type="boolean" id="enabled" mode="w" >
+True
+</property>
+<property type="string" id="component" mode="w" >
+${here/id}
+</property>
+<property type="string" id="eventClass" mode="w" >
+/Cmd/Fail
+</property>
+<property type="int" id="severity" mode="w" >
+3
+</property>
+<property type="string" id="commandTemplate" mode="w" >
+/usr/bin/curl -s http://${here/title}/jmx
+</property>
+<property type="int" id="cycletime" mode="w" >
+300
+</property>
+<property type="boolean" id="usessh" mode="w" >
+True
+</property>
+<property type="string" id="parser" mode="w" >
+ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+</property>
+<tomanycont id='datapoints'>
+<object id='heap_memory_capacity_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='heap_memory_used_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='non_heap_memory_capacity_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+<object id='non_heap_memory_used_bytes' module='Products.ZenModel.RRDDataPoint' class='RRDDataPoint'>
+<property select_variable="rrdtypes" type="selection" id="rrdtype" mode="w" >
+GAUGE
+</property>
+<property type="boolean" id="isrow" mode="w" >
+True
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+<tomanycont id='graphDefs'>
+<object id='Heap Memory' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<tomanycont id='graphPoints'>
+<object id='heap_memory_capacity_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+SecondaryNameNodeMonitor_heap_memory_capacity_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='heap_memory_used_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+SecondaryNameNodeMonitor_heap_memory_used_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+<object id='Non Heap Memory' module='Products.ZenModel.GraphDefinition' class='GraphDefinition'>
+<property type="int" id="height" mode="w" >
+100
+</property>
+<property type="int" id="width" mode="w" >
+500
+</property>
+<property type="boolean" id="log" mode="w" >
+False
+</property>
+<property type="boolean" id="base" mode="w" >
+False
+</property>
+<property type="int" id="miny" mode="w" >
+-1
+</property>
+<property type="int" id="maxy" mode="w" >
+-1
+</property>
+<property type="boolean" id="hasSummary" mode="w" >
+True
+</property>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<tomanycont id='graphPoints'>
+<object id='non_heap_memory_capacity_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+0
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+SecondaryNameNodeMonitor_non_heap_memory_capacity_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+<object id='non_heap_memory_used_bytes' module='Products.ZenModel.DataPointGraphPoint' class='DataPointGraphPoint'>
+<property type="long" id="sequence" mode="w" >
+1
+</property>
+<property select_variable="lineTypes" type="selection" id="lineType" mode="w" >
+LINE
+</property>
+<property type="long" id="lineWidth" mode="w" >
+1
+</property>
+<property type="boolean" id="stacked" mode="w" >
+False
+</property>
+<property type="string" id="format" mode="w" >
+%5.2lf%s
+</property>
+<property type="string" id="legend" mode="w" >
+${graphPoint/id}
+</property>
+<property type="long" id="limit" mode="w" >
+-1
+</property>
+<property type="string" id="dpName" mode="w" >
+SecondaryNameNodeMonitor_non_heap_memory_used_bytes
+</property>
+<property type="string" id="cFunc" mode="w" >
+AVERAGE
+</property>
+</object>
+</tomanycont>
+</object>
+</tomanycont>
+</object>
 </objects>
