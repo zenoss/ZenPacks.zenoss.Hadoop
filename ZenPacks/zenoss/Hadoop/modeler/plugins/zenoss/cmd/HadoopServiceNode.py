@@ -42,7 +42,9 @@ class HadoopServiceNode(CommandPlugin):
 
         node_oms = []
 
-        jobtracker = self._get_attr('mapred.job.tracker.http.address', results)
+        jobtracker = self._prep_ip(device,
+            self._get_attr('mapred.job.tracker.http.address', results)
+        )
         log.debug('Jobtracker Node: %s' % jobtracker)
         if jobtracker:
             node_oms.append(ObjectMap({
@@ -51,7 +53,9 @@ class HadoopServiceNode(CommandPlugin):
                 'node_type': 'Job Tracker',
             }))
 
-        secondary = self._get_attr('dfs.secondary.http.address', results)
+        secondary = self._prep_ip(device,
+            self._get_attr('dfs.secondary.http.address', results)
+        )
         log.debug('Secondary Name Node: %s' % secondary)
         if secondary:
             node_oms.append(ObjectMap({
@@ -84,3 +88,14 @@ class HadoopServiceNode(CommandPlugin):
             return res or default
         except AttributeError:
             return default
+
+    def _prep_ip(self, device, val):
+        """Check if node IP is equal to host and replace with host's IP"""
+        if not val:
+            return ""
+
+        ip, port = val.split(":")
+        if ip == "0.0.0.0":
+            ip = device.manageIp
+
+        return ip + ":" + port
