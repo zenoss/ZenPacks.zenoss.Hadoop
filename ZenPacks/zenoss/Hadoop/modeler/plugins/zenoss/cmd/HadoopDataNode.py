@@ -26,7 +26,7 @@ class HadoopDataNode(CommandPlugin):
     A command plugin for Hadoop to look for Data Nodes
     """
 
-    command = "/usr/bin/curl -i -s http://localhost:50070/jmx"
+    command = "/usr/bin/curl -s http://localhost:50070/jmx"
 
     def process(self, device, results, log):
         log.info('Collecting Hadoop nodes for device %s' % device.id)
@@ -40,10 +40,7 @@ class HadoopDataNode(CommandPlugin):
 
         # print results
 
-        # Skip HTTP header
-        res = '\n'.join(results.split('\n')[4:]) 
-
-        data = json.loads(res)
+        data = json.loads(results)
         node_oms = []
         for bean in data['beans']:
             if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':

@@ -26,7 +26,7 @@ class HadoopServiceNode(CommandPlugin):
     Name nodes
     """
 
-    command = "/usr/bin/curl -i -s http://localhost:50070/conf"
+    command = "/usr/bin/curl -s http://localhost:50070/conf"
 
     def process(self, device, results, log):
         log.info('Collecting Hadoop nodes for device %s' % device.id)
@@ -39,9 +39,6 @@ class HadoopServiceNode(CommandPlugin):
         # TODO: add try ... except on below code to catch bad-data
 
         # print results
-
-        # # Skip HTTP header if you plan to parse XML
-        # res = '\n'.join(results.split('\n')[4:])
 
         node_oms = []
 

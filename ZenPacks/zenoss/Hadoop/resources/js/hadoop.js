@@ -107,14 +107,14 @@ ZC.HadoopServiceNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 renderer: Zenoss.render.severity,
                 width: 50
             },{
-                id: 'name',
-                dataIndex: 'name',
-                header: _t('Name'),
-            },{
                 id: 'node_type',
                 dataIndex: 'node_type',
                 header: _t('Node Type'),
                 width: 150
+            },{
+                id: 'name',
+                dataIndex: 'name',
+                header: _t('Name'),
             },{
                 id: 'last_contacted',
                 dataIndex: 'last_contacted',
