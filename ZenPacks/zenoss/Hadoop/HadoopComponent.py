@@ -30,6 +30,9 @@ class HadoopComponent(DeviceComponent, ManagedEntity):
             },),
         },)
 
+    def getStatus(self):
+        return super(HadoopComponent, self).getStatus("/Status")
+
     def getIconPath(self):
         '''
         Return the path to an icon for this component.
