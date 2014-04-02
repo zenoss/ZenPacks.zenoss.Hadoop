@@ -28,7 +28,7 @@ unused(Globals)
 
 
 # Categorize zProperties.
-setzPropertyCategory('zHadoop', 'Hadoop')
+# setzPropertyCategory('zHadoop', 'Hadoop')
 
 # Modules containing model classes. Used by zenchkschema to validate
 # bidirectional integrity of defined relationships.
@@ -103,9 +103,9 @@ class ZenPack(ZenPackBase):
     ZenPack loader that handles custom installation and removal tasks.
     """
 
-    packZProperties = [
-        ('zHadoop', False, 'boolean'),
-    ]
+    # packZProperties = [
+    #     ('zHadoop', False, 'boolean'),
+    # ]
 
     def install(self, app):
         super(ZenPack, self).install(app)
