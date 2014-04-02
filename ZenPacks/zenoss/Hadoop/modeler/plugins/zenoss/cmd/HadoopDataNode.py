@@ -81,6 +81,6 @@ class HadoopDataNode(CommandPlugin):
                 'id': prepId(node_name),
                 'title': node_name,
                 'health_state': health_state,
-                'last_contacted': node_data['lastContact']
+                'last_contacted': node_data.get('lastContact', '')
             }))
         return maps
