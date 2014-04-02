@@ -20,6 +20,7 @@ from ZenPacks.zenoss.Hadoop.modeler.plugins.zenoss.cmd.HadoopDataNode \
 from ZenPacks.zenoss.Hadoop.modeler.plugins.zenoss.cmd.HadoopServiceNode \
     import HadoopServiceNode
 from ZenPacks.zenoss.Hadoop.tests.utils import test_device, load_data
+from ZenPacks.zenoss.Hadoop.utils import node_oms
 
 
 class MockJar(object):
@@ -117,7 +118,7 @@ class HadoopModelerHelpersTestCase(BaseTestCase):
 
     def test_node_oms(self):
         data = '{"localhost":{"usedSpace":49152,"lastContact":1}}'
-        om = self.d_modeler._node_oms(log, data, "Normal")[0]
+        om = node_oms(log, data, "Normal")[0]
         self.assertEquals(om.id, 'localhost')
         self.assertEquals(om.last_contacted, 1)
         self.assertEquals(om.health_state, 'Normal')
