@@ -34,7 +34,6 @@ DS_TO_RELATION = {
 
 
 class hadoop_parser(CommandParser):
-
     def processResults(self, cmd, result):
         """
         Parse the results of the hadoop datasource.
@@ -138,6 +137,13 @@ class hadoop_parser(CommandParser):
         return result
 
     def data_nodes_remodel(self, data):
+        """
+        Create RelationshipMap for data nodes remodeling.
+
+        @param data: parsed result of command execution
+        @type data: dict
+        @return: list of RelationshipMap
+        """
         nodes_oms = []
         for value in data.get('beans'):
             if value.get('name') == 'Hadoop:service=NameNode,name=NameNodeInfo':
@@ -147,13 +153,21 @@ class hadoop_parser(CommandParser):
                     node_oms(log, value.get('DeadNodes'), NODE_HEALTH_DEAD))
                 nodes_oms.extend(
                     node_oms(log, value.get('DecomNodes'), NODE_HEALTH_DECOM))
-        if nodes_oms:
-            return [RelationshipMap(
+        return [RelationshipMap(
                 relname='hadoop_data_nodes',
                 modname=MODULE_NAME['HadoopDataNode'],
                 objmaps=nodes_oms)]
 
     def service_nodes_remodel(self, cmd, state):
+        """
+        Create ObjectMap for service nodes remodeling.
+
+        @param cmd: cmd instance
+        @type cmd: instance
+        @param state: health state of the component (Normal or Dead)
+        @type state: str
+        @return: list of ObjectMap
+        """
         module = DS_TO_RELATION.get(cmd.ds)
         if module:
             return [ObjectMap({
@@ -162,7 +176,18 @@ class hadoop_parser(CommandParser):
                 'health_state': state
             })]
 
-    def apply_maps(self, cmd, maps=None, state=None):
+    def apply_maps(self, cmd, maps=[], state=None):
+        """
+        Call remote CommandPerformanceConfig instance to apply maps.
+
+        @param cmd: cmd instance
+        @type cmd: instance
+        @param maps: list of RelationshipMap|ObjectMap
+        @type maps: list
+        @param state: health state of the component (Normal or Dead)
+        @type state: str
+        @return: None
+        """
         if state:
             maps = self.service_nodes_remodel(cmd, state)
             # No need to apply maps for this datasource.
@@ -179,11 +204,13 @@ class hadoop_parser(CommandParser):
         )
 
     def callback_success(self, comp, message):
+        """Called on success."""
         if message:
             log.debug('Changes applied to %s', comp)
         log.debug('No changes applied to %s', comp)
 
     def callback_error(self, comp, error):
+        """Called on error."""
         if isinstance(error, Failure):
             log.debug(error.value)
 
