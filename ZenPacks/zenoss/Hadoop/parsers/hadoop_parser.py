@@ -147,12 +147,10 @@ class hadoop_parser(CommandParser):
         nodes_oms = []
         for value in data.get('beans'):
             if value.get('name') == 'Hadoop:service=NameNode,name=NameNodeInfo':
-                nodes_oms.extend(
-                    node_oms(log, value.get('LiveNodes'), NODE_HEALTH_NORMAL))
-                nodes_oms.extend(
-                    node_oms(log, value.get('DeadNodes'), NODE_HEALTH_DEAD))
-                nodes_oms.extend(
-                    node_oms(log, value.get('DecomNodes'), NODE_HEALTH_DECOM))
+                for key, val in (('LiveNodes', NODE_HEALTH_NORMAL),
+                                 ('DeadNodes', NODE_HEALTH_DEAD),
+                                 ('DecomNodes', NODE_HEALTH_DECOM)):
+                    nodes_oms.extend(node_oms(log, value.get(key), val, True))
         return [RelationshipMap(
                 relname='hadoop_data_nodes',
                 modname=MODULE_NAME['HadoopDataNode'],
