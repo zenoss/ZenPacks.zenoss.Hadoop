@@ -7,14 +7,30 @@
 #
 ##############################################################################
 
-
-from Products.ZenRRD.CommandParser import CommandParser
-from Products.ZenUtils.Utils import getExitMessage
-from Products.ZenEvents import ZenEventClasses
 import json
 import logging
 
+import zope.interface
+from twisted.python.failure import Failure
+
+from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
+from Products.ZenCollector.interfaces import ICollector
+from Products.ZenEvents import ZenEventClasses
+from Products.ZenRRD.CommandParser import CommandParser
+from Products.ZenUtils.Utils import getExitMessage
+
+from ZenPacks.zenoss.Hadoop import MODULE_NAME
+from ZenPacks.zenoss.Hadoop.utils import (
+    NODE_HEALTH_NORMAL, NODE_HEALTH_DEAD, NODE_HEALTH_DECOM, node_oms)
+
+
 log = logging.getLogger("zen.HadoopParser")
+
+DS_TO_RELATION = {
+    'DataNodeMonitor': ('hadoop_data_nodes', 'HadoopDataNode'),
+    'SecondaryNameNodeMonitor': ('hadoop_secondary_name_node', 'HadoopSecondaryNameNode'),
+    'JobTrackerMonitor': ('hadoop_job_tracker', 'HadoopJobTracker')
+}
 
 
 class hadoop_parser(CommandParser):
@@ -22,7 +38,6 @@ class hadoop_parser(CommandParser):
         """
         Parse the results of the hadoop datasource.
         """
-
         points_to_convert = {
             'heap_memory_capacity_bytes': ('HeapMemoryUsage', 'max'),
             'heap_memory_used_bytes': ('HeapMemoryUsage', 'used'),
@@ -41,7 +56,11 @@ class hadoop_parser(CommandParser):
                 else 'No monitoring data received.'
             )
             add_event(result, cmd, msg)
+            # Change the health state for components.
+            self.apply_maps(cmd, state=NODE_HEALTH_DEAD)
             return result
+
+        self.apply_maps(cmd, state=NODE_HEALTH_NORMAL)
 
         try:
             data = json.loads(cmd.result.output)
@@ -110,7 +129,90 @@ class hadoop_parser(CommandParser):
         msg = 'Successfully parsed collected data.'
         add_event(result, cmd, msg)
         log.debug((cmd.ds, '<<<---datasource', result.values, '<<<---result'))
+
+        # Nodes remodeling.
+        if cmd.ds == "NameNodeMonitor":
+            maps = self.data_nodes_remodel(data)
+            self.apply_maps(cmd, maps=maps)
         return result
+
+    def data_nodes_remodel(self, data):
+        """
+        Create RelationshipMap for data nodes remodeling.
+
+        @param data: parsed result of command execution
+        @type data: dict
+        @return: list of RelationshipMap
+        """
+        nodes_oms = []
+        for value in data.get('beans'):
+            if value.get('name') == 'Hadoop:service=NameNode,name=NameNodeInfo':
+                nodes_oms.extend(
+                    node_oms(log, value.get('LiveNodes'), NODE_HEALTH_NORMAL))
+                nodes_oms.extend(
+                    node_oms(log, value.get('DeadNodes'), NODE_HEALTH_DEAD))
+                nodes_oms.extend(
+                    node_oms(log, value.get('DecomNodes'), NODE_HEALTH_DECOM))
+        return [RelationshipMap(
+                relname='hadoop_data_nodes',
+                modname=MODULE_NAME['HadoopDataNode'],
+                objmaps=nodes_oms)]
+
+    def service_nodes_remodel(self, cmd, state):
+        """
+        Create ObjectMap for service nodes remodeling.
+
+        @param cmd: cmd instance
+        @type cmd: instance
+        @param state: health state of the component (Normal or Dead)
+        @type state: str
+        @return: list of ObjectMap
+        """
+        module = DS_TO_RELATION.get(cmd.ds)
+        if module:
+            return [ObjectMap({
+                "compname": "{}/{}".format(module[0], cmd.component),
+                "modname": module[1],
+                'health_state': state
+            })]
+
+    def apply_maps(self, cmd, maps=[], state=None):
+        """
+        Call remote CommandPerformanceConfig instance to apply maps.
+
+        @param cmd: cmd instance
+        @type cmd: instance
+        @param maps: list of RelationshipMap|ObjectMap
+        @type maps: list
+        @param state: health state of the component (Normal or Dead)
+        @type state: str
+        @return: None
+        """
+        if state:
+            maps = self.service_nodes_remodel(cmd, state)
+            # No need to apply maps for this datasource.
+            if not maps:
+                return
+
+        collector = zope.component.queryUtility(ICollector)
+        remoteProxy = collector.getRemoteConfigServiceProxy()
+        dev_id = cmd.deviceConfig.configId
+        changed = remoteProxy.callRemote('applyDataMaps', dev_id, maps)
+        changed.addCallbacks(
+            lambda mes: self.callback_success(cmd.component, mes),
+            lambda err: self.callback_error(cmd.component, err)
+        )
+
+    def callback_success(self, comp, message):
+        """Called on success."""
+        if message:
+            log.debug('Changes applied to %s', comp)
+        log.debug('No changes applied to %s', comp)
+
+    def callback_error(self, comp, error):
+        """Called on error."""
+        if isinstance(error, Failure):
+            log.debug(error.value)
 
 
 def add_event(result, cmd, msg):

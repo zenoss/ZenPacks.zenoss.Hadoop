@@ -28,6 +28,9 @@ class TestParser(BaseTestCase):
         self.cmd.points = [self.cmd]
         self.cmd.ds = "NameNodeMonitor"
 
+        # Patch apply_maps method.
+        hadoop_parser.apply_maps = lambda *args, **kwargs: None
+
     def test_parser_values(self):
         self.assertEquals(
             hadoop_parser().processResults(

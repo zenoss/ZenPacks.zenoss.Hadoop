@@ -18,7 +18,7 @@ from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin
 
 from ZenPacks.zenoss.Hadoop import MODULE_NAME
 from ZenPacks.zenoss.Hadoop.utils import NAME_SPLITTER, NODE_HEALTH_NORMAL, \
-    NODE_HEALTH_DEAD, NODE_HEALTH_DECOM
+    NODE_HEALTH_DEAD, NODE_HEALTH_DECOM, node_oms
 
 
 class HadoopDataNode(CommandPlugin):
@@ -41,23 +41,23 @@ class HadoopDataNode(CommandPlugin):
         # print results
 
         data = json.loads(results)
-        node_oms = []
+        nodes_oms = []
         for bean in data['beans']:
             if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':
                 log.debug('Collecting live nodes')
-                node_oms.extend(
-                    self._node_oms(log, bean["LiveNodes"], NODE_HEALTH_NORMAL))
+                nodes_oms.extend(
+                    node_oms(log, bean["LiveNodes"], NODE_HEALTH_NORMAL))
                 log.debug('Collecting dead nodes')
-                node_oms.extend(
-                    self._node_oms(log, bean["DeadNodes"], NODE_HEALTH_DEAD))
+                nodes_oms.extend(
+                    node_oms(log, bean["DeadNodes"], NODE_HEALTH_DEAD))
                 log.debug('Collecting decommissioned nodes')
-                node_oms.extend(
-                    self._node_oms(log, bean["DecomNodes"], NODE_HEALTH_DECOM))
+                nodes_oms.extend(
+                    node_oms(log, bean["DecomNodes"], NODE_HEALTH_DECOM))
 
         maps['hadoop_data_nodes'].append(RelationshipMap(
             relname='hadoop_data_nodes',
             modname=MODULE_NAME['HadoopDataNode'],
-            objmaps=node_oms))
+            objmaps=nodes_oms))
 
         # Clear non-existing component events.
         # maps['device'].append(ObjectMap({
@@ -70,17 +70,3 @@ class HadoopDataNode(CommandPlugin):
         )
 
         return list(chain.from_iterable(maps.itervalues()))
-
-    def _node_oms(self, log, data, health_state):
-        """Builds node OMs"""
-        maps = []
-        nodes = json.loads(data)
-        for node_name, node_data in nodes.iteritems():
-            log.debug(node_name)
-            maps.append(ObjectMap({
-                'id': prepId(node_name),
-                'title': node_name,
-                'health_state': health_state,
-                'last_contacted': node_data.get('lastContact', '')
-            }))
-        return maps
