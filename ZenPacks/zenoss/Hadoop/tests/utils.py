@@ -37,7 +37,9 @@ def test_device(dmd, factor=1):
     """
 
     from ZenPacks.zenoss.Hadoop.HadoopDataNode import HadoopDataNode
-    from ZenPacks.zenoss.Hadoop.HadoopServiceNode import HadoopServiceNode
+    from ZenPacks.zenoss.Hadoop.HadoopJobTracker import HadoopJobTracker
+    from ZenPacks.zenoss.Hadoop.HadoopSecondaryNameNode import \
+        HadoopSecondaryNameNode
 
     dc = dmd.Devices.createOrganizer('/Server')
 
@@ -53,11 +55,18 @@ def test_device(dmd, factor=1):
             HadoopDataNode('data_node%s' % (data_node_id))
         )
 
-    # Service Nodes
-    for service_node_id in range(factor):
-        service_node = add_obj(
-            device.hadoop_service_nodes,
-            HadoopServiceNode('table%s' % (service_node_id))
+    # Job Trackers
+    for node_id in range(factor):
+        node = add_obj(
+            device.hadoop_job_tracker,
+            HadoopJobTracker('job_tracker%s' % (node_id))
+        )
+
+    # Secondary Name Nodes
+    for node_id in range(factor):
+        node = add_obj(
+            device.hadoop_secondary_name_node,
+            HadoopSecondaryNameNode('name_node%s' % (node_id))
         )
 
     return device
