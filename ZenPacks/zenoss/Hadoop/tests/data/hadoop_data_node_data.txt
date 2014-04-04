@@ -1,0 +1,23 @@
+{
+"beans" : [ {
+"name" : "Hadoop:service=NameNode,name=NameNodeInfo",
+"modelerType" : "org.apache.hadoop.hdfs.server.namenode.FSNamesystem",
+"Threads" : 27,
+"HostName" : "localhost",
+"Used" : 49152,
+"Version" : "1.2.1, r1503152",
+"Total" : 18568990720,
+"UpgradeFinalized" : true,
+"Free" : 14477631488,
+"Safemode" : "",
+"NonDfsUsedSpace" : 4091310080,
+"PercentUsed" : 2.6469937E-4,
+"PercentRemaining" : 77.96671,
+"TotalBlocks" : 2,
+"TotalFiles" : 10,
+"LiveNodes" : "{\"localhost.live\":{\"usedSpace\":49152,\"lastContact\":0}}",
+"DeadNodes" : "{\"localhost.dead\":{\"usedSpace\":49152,\"lastContact\":1}}",
+"DecomNodes" : "{\"localhost.decom\":{\"usedSpace\":49152,\"lastContact\":2}}",
+"NameDirStatuses" : "{\"failed\":{},\"active\":{\"/opt/hadoop/hadoop/dfs/name\":\"IMAGE_AND_EDITS\"}}"
+}]
+}
