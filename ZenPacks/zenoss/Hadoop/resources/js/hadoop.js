@@ -26,6 +26,7 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
             fields: [
                 {name: 'uid'},
                 {name: 'name'},
+                {name: 'hbase_device'},
                 {name: 'severity'},
                 {name: 'status'},
                 {name: 'usesMonitorAttribute'},
@@ -45,6 +46,10 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 id: 'name',
                 dataIndex: 'name',
                 header: _t('Name'),
+            },{
+                id: 'hbase_device',
+                dataIndex: 'hbase_device',
+                header: _t('HBase Device'),
             },{
                 id: 'last_contacted',
                 dataIndex: 'last_contacted',
