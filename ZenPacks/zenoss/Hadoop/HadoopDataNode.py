@@ -53,7 +53,7 @@ class IHadoopDataNodeInfo(IComponentInfo):
     device = schema.Entity(title=_t(u'Device'))
     health_state = schema.TextLine(title=_t(u'Health State'))
     last_contacted = schema.TextLine(title=_t(u'Last Contacted'))
-    hbase_device_id = schema.TextLine(title=_t(u'HBase Device'))
+    hbase_device = schema.TextLine(title=_t(u'HBase Device'))
 
 
 class HadoopDataNodeInfo(ComponentInfo):
@@ -69,4 +69,12 @@ class HadoopDataNodeInfo(ComponentInfo):
     @property
     @info
     def hbase_device(self):
-        return self._object.hbase_device_id    
+        dev_id = self._object.hbase_device_id
+        if dev_id:
+            obj = self._object.findDeviceByIdExact(dev_id)
+            if obj:
+                return '<a href="{}">{}</a>'.format(
+                            obj.getPrimaryUrlPath(),
+                            obj.titleOrId()
+                        )
+        return ''
