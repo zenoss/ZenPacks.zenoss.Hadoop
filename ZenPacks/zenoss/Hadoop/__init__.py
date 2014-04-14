@@ -155,20 +155,19 @@ def setHBaseAutodiscover(self, node_name):
             hbase_device.setManageIp(ip)
             # hbase_device.setProdState(self._running_prodstate)
             hbase_device.setPerformanceMonitor(self.getPerformanceServer().id)
+            hbase_device.index_object()
+            hbase_device.zCollectorPlugins.extend(
+                ['zHBaseCollector', 'zHBaseTableCollector']
+            )
+            hbase_device.zHBasePassword = self.zHBasePassword
+            hbase_device.zHBaseUsername = self.zHBaseUsername
+            hbase_device.zHBasePort = self.zHBasePort
 
         hbase_device.index_object()
         notify(IndexingEvent(hbase_device))
 
         # Schedule a modeling job for the new device.
         # hbase_device.collectDevice(setlog=False, background=True)
-
-        # self.dmd.ZenEventManager.sendEvent(dict(
-        #     device=self.id,
-        #     summary='HBase was discovered on %s' % node_name,
-        #     eventClass='/Status',
-        #     eventKey='HBaseAutodiscover',
-        #     severity=2,
-        #     ))
 
     # Setting HBase device ID as node property for back link from UI
     for node in self.hadoop_data_nodes():
