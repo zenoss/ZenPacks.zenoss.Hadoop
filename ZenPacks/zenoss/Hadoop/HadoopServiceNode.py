@@ -28,12 +28,10 @@ class HadoopServiceNode(HadoopComponent):
 
     node_type = None
     health_state = None
-    last_contacted = None
 
     _properties = HadoopComponent._properties + (
         {'id': 'node_type', 'type': 'string'},
         {'id': 'health_state', 'type': 'string'},
-        {'id': 'last_contacted', 'type': 'string'},
     )
 
     def device(self):
@@ -47,7 +45,6 @@ class IHadoopServiceNodeInfo(IComponentInfo):
     device = schema.Entity(title=_t(u'Device'))
     node_type = schema.TextLine(title=_t(u'Node Type'))
     health_state = schema.TextLine(title=_t(u'Health State'))
-    last_contacted = schema.TextLine(title=_t(u'Last Contacted'))
 
 
 class HadoopServiceNodeInfo(ComponentInfo):
@@ -59,4 +56,3 @@ class HadoopServiceNodeInfo(ComponentInfo):
 
     node_type = ProxyProperty('node_type')
     health_state = ProxyProperty('health_state')
-    last_contacted = ProxyProperty('last_contacted')

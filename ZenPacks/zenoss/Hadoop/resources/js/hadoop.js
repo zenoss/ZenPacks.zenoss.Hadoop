@@ -26,6 +26,7 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
             fields: [
                 {name: 'uid'},
                 {name: 'name'},
+                {name: 'hbase_device'},
                 {name: 'severity'},
                 {name: 'status'},
                 {name: 'usesMonitorAttribute'},
@@ -45,6 +46,10 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 id: 'name',
                 dataIndex: 'name',
                 header: _t('Name'),
+            },{
+                id: 'hbase_device',
+                dataIndex: 'hbase_device',
+                header: _t('HBase Device'),
             },{
                 id: 'last_contacted',
                 dataIndex: 'last_contacted',
@@ -98,7 +103,6 @@ ZC.HadoopJobTrackerPanel = Ext.extend(ZC.ComponentGridPanel, {
                 {name: 'monitored'},
                 {name: 'locking'},
                 {name: 'node_type'},
-                {name: 'last_contacted'},
                 {name: 'health_state'},
             ],
             columns: [{
@@ -116,11 +120,6 @@ ZC.HadoopJobTrackerPanel = Ext.extend(ZC.ComponentGridPanel, {
                 id: 'name',
                 dataIndex: 'name',
                 header: _t('Name'),
-            },{
-                id: 'last_contacted',
-                dataIndex: 'last_contacted',
-                header: _t('Last Contacted'),
-                width: 100
             },{
                 id: 'health_state',
                 dataIndex: 'health_state',
@@ -169,7 +168,6 @@ ZC.HadoopSecondaryNameNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 {name: 'monitored'},
                 {name: 'locking'},
                 {name: 'node_type'},
-                {name: 'last_contacted'},
                 {name: 'health_state'},
             ],
             columns: [{
@@ -187,11 +185,6 @@ ZC.HadoopSecondaryNameNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 id: 'name',
                 dataIndex: 'name',
                 header: _t('Name'),
-            },{
-                id: 'last_contacted',
-                dataIndex: 'last_contacted',
-                header: _t('Last Contacted'),
-                width: 100
             },{
                 id: 'health_state',
                 dataIndex: 'health_state',

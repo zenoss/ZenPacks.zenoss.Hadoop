@@ -16,19 +16,26 @@ log = logging.getLogger('zen.Hadoop')
 
 import Globals
 
+from zope.event import notify
+
 from Products.ZenEvents.EventManagerBase import EventManagerBase
 from Products.ZenModel.Device import Device
 from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
 from Products.ZenRelations.zPropertyCategory import setzPropertyCategory
 from Products.ZenUtils.Utils import unused, monkeypatch
+from Products.ZenUtils.IpUtil import getHostByName
 from Products.Zuul.interfaces import ICatalogTool
+from Products.Zuul.catalog.events import IndexingEvent
 
 unused(Globals)
 
 
 # Categorize zProperties.
 # setzPropertyCategory('zHadoop', 'Hadoop')
+setzPropertyCategory('zHbaseAutodiscover', 'Hadoop')
+setzPropertyCategory('zHbaseDeviceClass', 'Hadoop')
+
 
 # Modules containing model classes. Used by zenchkschema to validate
 # bidirectional integrity of defined relationships.
@@ -94,8 +101,91 @@ def setErrorNotification(self, msg):
 def getErrorNotification(self):
     return
 
+
+def setHBaseAutodiscover(self, node_name):
+    """
+    One of HadoopDataNode can be occupied by HBase.
+    """
+    hbase_device = None
+    old_hbase_device = None
+    dc = self.dmd.getOrganizer(self.zHbaseDeviceClass)
+
+    # a) Check if HBase changed it's node
+    for node in self.hadoop_data_nodes():
+        if node.hbase_device_id == node_name:
+            # Nothing changed
+            # print "Nothing changed"
+            return
+
+    # b) Lookup for old HBase node
+    for node in self.hadoop_data_nodes():
+        if node.hbase_device_id:
+            old_hbase_device = self.findDeviceByIdExact(node.hbase_device_id)
+            node.hbase_device_id = None
+            node.index_object()
+            break
+
+    if old_hbase_device:
+        # print "Old HBase device exists ", old_hbase_device
+        # print "Changing IP to", node_name
+        hbase_device = old_hbase_device
+        hbase_device.setManageIp(node_name)
+
+        hbase_device.index_object()
+        notify(IndexingEvent(hbase_device))
+    else:
+        ip = self._sanitizeIPaddress(node_name)
+        if not ip:
+            ip = getHostByName(node_name)
+
+        if not ip:
+            log.warn("Cann't resolve %s into IP address" % node_name)
+            return
+
+        hbase_device = self.findDevice(ip)
+        # print ip
+        # print hbase_device
+        if hbase_device:
+            log.info("HBase device found in existing devices")
+        else:
+            # print "Created"
+            log.info("HBase device created")
+            hbase_device = dc.createInstance(ip)
+            hbase_device.title = node_name
+            hbase_device.setManageIp(ip)
+            # hbase_device.setProdState(self._running_prodstate)
+            hbase_device.setPerformanceMonitor(self.getPerformanceServer().id)
+            hbase_device.index_object()
+            hbase_device.zCollectorPlugins.extend(
+                ['zHBaseCollector', 'zHBaseTableCollector']
+            )
+            hbase_device.zHBasePassword = self.zHBasePassword
+            hbase_device.zHBaseUsername = self.zHBaseUsername
+            hbase_device.zHBasePort = self.zHBasePort
+
+        hbase_device.index_object()
+        notify(IndexingEvent(hbase_device))
+
+        # Schedule a modeling job for the new device.
+        # hbase_device.collectDevice(setlog=False, background=True)
+
+    # Setting HBase device ID as node property for back link from UI
+    for node in self.hadoop_data_nodes():
+        if node.title == node_name:
+            node.hbase_device_id = hbase_device.id
+            node.index_object()
+
+    return
+
+
+def getHBaseAutodiscover(self):
+    return True
+
+
 Device.setErrorNotification = setErrorNotification
 Device.getErrorNotification = getErrorNotification
+Device.setHBaseAutodiscover = setHBaseAutodiscover
+Device.getHBaseAutodiscover = getHBaseAutodiscover
 
 
 # @monkeypatch('Products.ZenCollector.services.config.CollectorConfigService')
@@ -118,9 +208,11 @@ class ZenPack(ZenPackBase):
     ZenPack loader that handles custom installation and removal tasks.
     """
 
-    # packZProperties = [
-    #     ('zHadoop', False, 'boolean'),
-    # ]
+    packZProperties = [
+        # ('zHadoop', False, 'bool'),
+        ('zHbaseAutodiscover', False, 'bool'),
+        ('zHbaseDeviceClass', '/Server/Linux', 'string'),
+    ]
 
     def install(self, app):
         super(ZenPack, self).install(app)

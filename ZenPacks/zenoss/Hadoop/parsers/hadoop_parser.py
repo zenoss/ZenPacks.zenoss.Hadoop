@@ -28,9 +28,13 @@ log = logging.getLogger("zen.HadoopParser")
 
 DS_TO_RELATION = {
     'DataNodeMonitor': ('hadoop_data_nodes', 'HadoopDataNode'),
-    'SecondaryNameNodeMonitor': ('hadoop_secondary_name_node', 'HadoopSecondaryNameNode'),
+    'HBaseDiscoverMonitor': ('hadoop_data_nodes', 'HadoopDataNode'),
+    'SecondaryNameNodeMonitor': ('hadoop_secondary_name_node', \
+                                'HadoopSecondaryNameNode'),
     'JobTrackerMonitor': ('hadoop_job_tracker', 'HadoopJobTracker')
 }
+
+MSG_SUCCESS = 'Successfully parsed collected data.'
 
 
 class hadoop_parser(CommandParser):
@@ -61,6 +65,13 @@ class hadoop_parser(CommandParser):
             return result
 
         self.apply_maps(cmd, state=NODE_HEALTH_NORMAL)
+
+        # HBase autodiscover
+        if cmd.ds == "HBaseDiscoverMonitor":
+            maps = self.hbase_autodiscover(cmd, result)
+            self.apply_maps(cmd, maps=maps)
+            add_event(result, cmd, MSG_SUCCESS)
+            return result
 
         try:
             data = json.loads(cmd.result.output)
@@ -126,8 +137,8 @@ class hadoop_parser(CommandParser):
                     else:
                         if value.get(item) is not None:
                             result.values.append((point, value[item]))
-        msg = 'Successfully parsed collected data.'
-        add_event(result, cmd, msg)
+
+        add_event(result, cmd, MSG_SUCCESS)
         log.debug((cmd.ds, '<<<---datasource', result.values, '<<<---result'))
 
         # Nodes remodeling.
@@ -155,6 +166,32 @@ class hadoop_parser(CommandParser):
                 relname='hadoop_data_nodes',
                 modname=MODULE_NAME['HadoopDataNode'],
                 objmaps=nodes_oms)]
+
+    def hbase_autodiscover(self, cmd, result):
+        """
+        Looks for presence of HBase status in command stdout
+        """
+        data = cmd.result.output
+        module = DS_TO_RELATION.get(cmd.ds)
+
+        # HBase has redirect to /master-status in HTML body
+        if ("master-status" in data) and module:
+            result.events.append(dict(
+                severity=2,
+                summary='HBase was discovered on %s data node' % cmd.component,
+                message='HBase was discovered on %s data node' % cmd.component,
+                eventKey='hadoop_hbase',
+                eventClassKey='hadoop_hbase',
+                eventClass='/Status',
+                component=cmd.component,
+            ))
+
+            return [ObjectMap({
+                "compname": None,
+                "modname": module[1],
+                "setHBaseAutodiscover": cmd.component
+            })]
+        return []
 
     def service_nodes_remodel(self, cmd, state):
         """
