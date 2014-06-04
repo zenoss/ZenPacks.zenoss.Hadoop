@@ -10,7 +10,7 @@
 import json
 import collections
 from itertools import chain
-import re
+import xml.etree.cElementTree as ET
 
 from Products.ZenUtils.Utils import prepId
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
@@ -36,12 +36,18 @@ class HadoopServiceNode(CommandPlugin):
             ('hadoop_secondary_name_node', []),
         ])
 
-        # TODO: add try ... except on below code to catch bad-data
+        try:
+            results = ET.fromstring(results)
+        except (TypeError, ET.ParseError) as err:
+            log.error('Modeler %s failed to parse the result.' % self.name())
+            return
 
-        # print results
-
-        jobtracker = self._prep_ip(device,
-            self._get_attr('mapred.job.tracker.http.address', results)
+        jobtracker_property_names = (
+            'mapred.job.tracker.http.address',  # Deprecated
+            'mapreduce.jobtracker.http.address'  # New
+        )
+        jobtracker = self._prep_ip(
+            device, self._get_attr(jobtracker_property_names, results)
         )
         log.debug('Jobtracker Node: %s' % jobtracker)
         if jobtracker:
@@ -56,9 +62,12 @@ class HadoopServiceNode(CommandPlugin):
                     })
                 ]))
 
-
-        secondary = self._prep_ip(device,
-            self._get_attr('dfs.secondary.http.address', results)
+        secondary_property_names = (
+            'dfs.secondary.http.address',  # Deprecated
+            'dfs.namenode.secondary.http-address'  # New
+        )
+        secondary = self._prep_ip(
+            device, self._get_attr(secondary_property_names, results)
         )
         log.debug('Secondary Name Node: %s' % secondary)
         if secondary:
@@ -85,13 +94,22 @@ class HadoopServiceNode(CommandPlugin):
 
         return list(chain.from_iterable(maps.itervalues()))
 
-    def _get_attr(self, attr, val, default=""):
-        """Look for attribute in configuration"""
-        try:
-            res = re.search('<name>%s</name><value>(.+?)</value>' % attr, val).group(1)
-            return res or default
-        except AttributeError:
-            return default
+    def _get_attr(self, attrs, result, default=""):
+        """
+        Look for the attribute in configuration data.
+
+        @param attrs: possible names of the attribute in conf data
+        @type attrs: tuple
+        @param result: parsed result of command output
+        @type result: ET Element object
+        @param default: optional, a value to be returned as a default
+        @type default: str
+        @return: the attribute value
+        """
+        for prop in result.findall('property'):
+            if prop.findtext('name') in attrs:
+                return prop.findtext('value')
+        return default
 
     def _prep_ip(self, device, val):
         """Check if node IP is equal to host and replace with host's IP"""
