@@ -8,7 +8,7 @@
 ##############################################################################
 
 import logging
-log = logging.getLogger('zen.HadoopTest')
+import xml.etree.cElementTree as ET
 
 from mock import Mock
 
@@ -21,6 +21,8 @@ from ZenPacks.zenoss.Hadoop.modeler.plugins.zenoss.cmd.HadoopServiceNode \
     import HadoopServiceNode
 from ZenPacks.zenoss.Hadoop.tests.utils import test_device, load_data
 from ZenPacks.zenoss.Hadoop.utils import node_oms
+
+log = logging.getLogger('zen.HadoopTest')
 
 
 class MockJar(object):
@@ -96,7 +98,6 @@ class HadoopComponentsTestCase(BaseTestCase):
             '10.10.10.10_50090')
         self.assertEquals(second_name_node.device().id, 'hadoop.testDevice')
         self.assertEquals(second_name_node.title, '10.10.10.10:50090')
-        self.assertEquals(second_name_node.last_contacted, None)
         self.assertEquals(second_name_node.health_state, None)
 
     def test_HadoopJobTracker(self):
@@ -105,7 +106,6 @@ class HadoopComponentsTestCase(BaseTestCase):
         job_tracker = self.d.hadoop_job_tracker._getOb('192.192.0.0_50030')
         self.assertEquals(job_tracker.device().id, 'hadoop.testDevice')
         self.assertEquals(job_tracker.title, '192.192.0.0:50030')
-        self.assertEquals(job_tracker.last_contacted, None)
         self.assertEquals(job_tracker.health_state, None)
 
 
@@ -125,6 +125,7 @@ class HadoopModelerHelpersTestCase(BaseTestCase):
 
     def test_get_attr(self):
         data = load_data('hadoop_service_node_data.txt')
+        data = ET.fromstring(data)
         attr = 'mapred.job.tracker.http.address'
         self.assertEquals(
             self.s_modeler._get_attr(attr, data), '192.192.0.0:50030'
