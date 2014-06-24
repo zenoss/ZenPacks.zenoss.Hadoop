@@ -41,9 +41,13 @@ setzPropertyCategory('zHbaseDeviceClass', 'Hadoop')
 # bidirectional integrity of defined relationships.
 productNames = (
     'HadoopJobTracker',
+    'HadoopTaskTracker',
     'HadoopSecondaryNameNode',
+    'HadoopResourceManager',
+    'HadoopNodeManager',
+    'HadoopJobHistory',
     'HadoopDataNode'
-    )
+)
 
 # Useful to avoid making literal string references to module and class names
 # throughout the rest of the ZenPack.
@@ -57,15 +61,23 @@ for product_name in productNames:
 # Define new device relations.
 NEW_DEVICE_RELATIONS = (
     ('hadoop_job_tracker', 'HadoopJobTracker'),
+    ('hadoop_task_tracker', 'HadoopTaskTracker'),
     ('hadoop_secondary_name_node', 'HadoopSecondaryNameNode'),
+    ('hadoop_resource_manager', 'HadoopResourceManager'),
+    ('hadoop_node_manager', 'HadoopNodeManager'),
+    ('hadoop_job_history', 'HadoopJobHistory'),
     ('hadoop_data_nodes', 'HadoopDataNode'),
-    )
+)
 
 NEW_COMPONENT_TYPES = (
     'ZenPacks.zenoss.Hadoop.HadoopJobTracker.HadoopJobTracker',
+    'ZenPacks.zenoss.Hadoop.HadoopTaskTracker.HadoopTaskTracker',
     'ZenPacks.zenoss.Hadoop.HadoopSecondaryNameNode.HadoopSecondaryNameNode',
+    'ZenPacks.zenoss.Hadoop.HadoopResourceManager.HadoopResourceManager',
+    'ZenPacks.zenoss.Hadoop.HadoopNodeManager.HadoopNodeManager',
+    'ZenPacks.zenoss.Hadoop.HadoopJobHistory.HadoopJobHistory',
     'ZenPacks.zenoss.Hadoop.HadoopDataNode.HadoopDataNode',
-    )
+)
 
 # Add new relationships to Device if they don't already exist.
 for relname, modname in NEW_DEVICE_RELATIONS:

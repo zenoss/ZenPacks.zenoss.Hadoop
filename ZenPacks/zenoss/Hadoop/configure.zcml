@@ -32,6 +32,12 @@
         />
 
     <adapter
+        provides=".HadoopTaskTracker.IHadoopTaskTrackerInfo"
+        for=".HadoopTaskTracker.HadoopTaskTracker"
+        factory=".HadoopTaskTracker.HadoopTaskTrackerInfo"
+        />
+
+    <adapter
         provides=".HadoopSecondaryNameNode.IHadoopSecondaryNameNodeInfo"
         for=".HadoopSecondaryNameNode.HadoopSecondaryNameNode"
         factory=".HadoopSecondaryNameNode.HadoopSecondaryNameNodeInfo"
@@ -41,6 +47,24 @@
         provides=".HadoopDataNode.IHadoopDataNodeInfo"
         for=".HadoopDataNode.HadoopDataNode"
         factory=".HadoopDataNode.HadoopDataNodeInfo"
+        />
+
+    <adapter
+        provides=".HadoopResourceManager.IHadoopResourceManagerInfo"
+        for=".HadoopResourceManager.HadoopResourceManager"
+        factory=".HadoopResourceManager.HadoopResourceManagerInfo"
+        />
+
+    <adapter
+        provides=".HadoopNodeManager.IHadoopNodeManagerInfo"
+        for=".HadoopNodeManager.HadoopNodeManager"
+        factory=".HadoopNodeManager.HadoopNodeManagerInfo"
+        />
+
+    <adapter
+        provides=".HadoopJobHistory.IHadoopJobHistoryInfo"
+        for=".HadoopJobHistory.HadoopJobHistory"
+        factory=".HadoopJobHistory.HadoopJobHistoryInfo"
         />
 
     <!-- Impact -->
