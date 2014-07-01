@@ -29,8 +29,8 @@ log = logging.getLogger("zen.HadoopParser")
 DS_TO_RELATION = {
     'DataNodeMonitor': ('hadoop_data_nodes', 'HadoopDataNode'),
     'HBaseDiscoverMonitor': ('hadoop_data_nodes', 'HadoopDataNode'),
-    'SecondaryNameNodeMonitor': ('hadoop_secondary_name_node', \
-                                'HadoopSecondaryNameNode'),
+    'SecondaryNameNodeMonitor': ('hadoop_secondary_name_node',
+                                 'HadoopSecondaryNameNode'),
     'JobTrackerMonitor': ('hadoop_job_tracker', 'HadoopJobTracker')
 }
 
@@ -47,17 +47,16 @@ class hadoop_parser(CommandParser):
             'heap_memory_used_bytes': ('HeapMemoryUsage', 'used'),
             'non_heap_memory_capacity_bytes': ('NonHeapMemoryUsage', 'max'),
             'non_heap_memory_used_bytes': ('NonHeapMemoryUsage', 'used'),
-            'dead_nodes_count': 'DeadNodes',
-            'live_nodes_count': 'LiveNodes',
-            'total_files': 'TotalFiles',
-            'threads': 'Threads',
+            'blocks_read': 'BlocksRead',
+            'blocks_removed': 'BlocksRemoved',
+            'blocks_written': 'BlocksWritten',
         }
 
         if cmd.result.exitCode != 0:
             msg = 'Error parsing collected data: {}'.format(
                 getExitMessage(cmd.result.exitCode) if not
                 'Unknown error code' in getExitMessage(cmd.result.exitCode)
-                else 'No monitoring data received.'
+                else 'No monitoring data received for {}.'.format(cmd.name)
             )
             add_event(result, cmd, msg)
             # Change the health state for components.
@@ -109,6 +108,8 @@ class hadoop_parser(CommandParser):
                     else:
                         if value.get(item) is not None:
                             result.values.append((point, value[item]))
+                        elif value.get(point.id) is not None:
+                            result.values.append((point, value[point.id]))
                 elif cmd.ds == "TaskTrackerMonitor":
                     if isinstance(item, tuple):
                         if value.get(item[0]) is not None:
@@ -129,6 +130,24 @@ class hadoop_parser(CommandParser):
                             if value.get(item) is not None:
                                 result.values.append((point, value[item]))
                 elif cmd.ds == 'SecondaryNameNodeMonitor':
+                    if isinstance(item, tuple):
+                        if value.get(item[0]) is not None:
+                            result.values.append((
+                                point, value[item[0]][item[1]]
+                            ))
+                    else:
+                        if value.get(item) is not None:
+                            result.values.append((point, value[item]))
+                elif cmd.ds == "NodeManagerMonitor":
+                    if isinstance(item, tuple):
+                        if value.get(item[0]) is not None:
+                            result.values.append((
+                                point, value[item[0]][item[1]]
+                            ))
+                    else:
+                        if value.get(item) is not None:
+                            result.values.append((point, value[item]))
+                elif cmd.ds == "ResourceManagerMonitor":
                     if isinstance(item, tuple):
                         if value.get(item[0]) is not None:
                             result.values.append((
@@ -258,8 +277,8 @@ def add_event(result, cmd, msg):
         severity=severity,
         summary=msg[0],
         message=msg[0] if len(msg) == 1 else msg[1],
-        eventKey='hadoop_json_parse',
-        eventClassKey='json_parse',
+        eventKey='Hadoop{}'.format(cmd.ds),
+        eventClassKey='hadoop_data_parse',
         eventClass='/Status',
         component=cmd.component,
     ))

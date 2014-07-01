@@ -107,7 +107,6 @@ fields = [
                 {name: 'monitor'},
                 {name: 'monitored'},
                 {name: 'locking'},
-                {name: 'last_contacted'},
                 {name: 'health_state'},
 ];
 
@@ -121,11 +120,6 @@ columns =[{
                 id: 'name',
                 dataIndex: 'name',
                 header: _t('Name'),
-            },{
-                id: 'last_contacted',
-                dataIndex: 'last_contacted',
-                header: _t('Last Contacted'),
-                width: 100
             },{
                 id: 'health_state',
                 dataIndex: 'health_state',

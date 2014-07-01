@@ -25,7 +25,6 @@ class HadoopServiceNode(CommandPlugin):
     A command plugin for Hadoop to look for Job Tracker / Secondary
     Name nodes
     """
-
     command = ("/usr/bin/curl -s http://localhost:50070/conf &&"
                " /usr/bin/curl -s http://localhost:50070/jmx")
 
@@ -40,6 +39,55 @@ class HadoopServiceNode(CommandPlugin):
             ('hadoop_node_manager', []),
             ('hadoop_job_history', []),
         ])
+
+        dict_components = {
+            'HadoopJobTracker': (
+                'Job Tracker',
+                'hadoop_job_tracker',
+                (
+                    'mapred.job.tracker.http.address',  # Deprecated
+                    'mapreduce.jobtracker.http.address'  # New
+                )
+            ),
+            'HadoopTaskTracker': (
+                'Task Tracker',
+                'hadoop_task_tracker',
+                (
+                    'mapred.task.tracker.http.address',  # Deprecated
+                    'mapreduce.tasktracker.http.address'  # New
+                )
+            ),
+            'HadoopSecondaryNameNode': (
+                'Secondary Name Node',
+                'hadoop_secondary_name_node',
+                (
+                    'dfs.secondary.http.address',  # Deprecated
+                    'dfs.namenode.secondary.http-address'  # New
+                )
+            ),
+            'HadoopResourceManager': (
+                'Resource Manager',
+                'hadoop_resource_manager',
+                (
+                    'yarn.resourcemanager.webapp.address'
+                )
+            ),
+            'HadoopNodeManager': (
+                'Node Manager',
+                'hadoop_node_manager',
+                (
+                    'yarn.nodemanager.webapp.address'
+                )
+            ),
+            'HadoopJobHistory': (
+                'Job History',
+                'hadoop_job_history',
+                (
+                    'mapreduce.jobhistory.webapp.address'
+                )
+            )
+        }
+
         try:
             result = results.split('</configuration>')
             results = ET.fromstring(result[0] + '</configuration>')
@@ -52,125 +100,35 @@ class HadoopServiceNode(CommandPlugin):
             if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':
                 hadoop_version = bean["Version"]
 
-        secondary_property_names = (
-            'dfs.secondary.http.address',  # Deprecated
-            'dfs.namenode.secondary.http-address'  # New
-        )
-        secondary = self._prep_ip(
-            device, self._get_attr(secondary_property_names, results)
-        )
-        log.debug('Secondary Name Node: %s' % secondary)
-        if secondary:
-            maps['hadoop_secondary_name_node'].append(RelationshipMap(
-                relname='hadoop_secondary_name_node',
-                modname=MODULE_NAME['HadoopSecondaryNameNode'],
-                objmaps=[
-                    ObjectMap({
-                        'id': prepId(secondary),
-                        'title': secondary,
-                        'node_type': 'Secondary Name Node',
-                    })
-                ]))
+        def build_relations(component):
+            """
+            Receive component's name and build relationships to device
+            """
+            data = dict_components[component]
+            component_name = self._get_attr(data[2], results)
+            log.debug(data[0] + ': {}'.format(component_name))
+            if component_name:
+                maps[data[1]].append(RelationshipMap(
+                    relname=data[1],
+                    modname=MODULE_NAME[component],
+                    objmaps=[
+                        ObjectMap({
+                            'id': prepId(component_name),
+                            'title': component_name,
+                            'node_type': data[0],
+                        })
+                    ]))
+
+        build_relations('HadoopSecondaryNameNode')
 
         # Check Hadoop version and add components according it.
         if hadoop_version.startswith('0') or hadoop_version.startswith('1'):
-            jobtracker_property_names = (
-                'mapred.job.tracker.http.address',  # Deprecated
-                'mapreduce.jobtracker.http.address'  # New
-            )
-            jobtracker = self._prep_ip(
-                device, self._get_attr(jobtracker_property_names, results)
-            )
-            log.debug('Jobtracker Node: %s' % jobtracker)
-            if jobtracker:
-                maps['hadoop_job_tracker'].append(RelationshipMap(
-                    relname='hadoop_job_tracker',
-                    modname=MODULE_NAME['HadoopJobTracker'],
-                    objmaps=[
-                        ObjectMap({
-                            'id': prepId(jobtracker),
-                            'title': jobtracker,
-                            'node_type': 'Job Tracker',
-                        })
-                    ]))
-
-            tasktracker_property_names = (
-                'mapred.task.tracker.http.address',  # Deprecated
-                'mapreduce.tasktracker.http.address'  # New
-            )
-            tasktracker = self._prep_ip(
-                device, self._get_attr(tasktracker_property_names, results)
-            )
-            log.debug('Task Tracker: %s' % tasktracker)
-            if jobtracker:
-                maps['hadoop_task_tracker'].append(RelationshipMap(
-                    relname='hadoop_task_tracker',
-                    modname=MODULE_NAME['HadoopTaskTracker'],
-                    objmaps=[
-                        ObjectMap({
-                            'id': prepId(tasktracker),
-                            'title': tasktracker,
-                            'node_type': 'Task Tracker',
-                        })
-                    ]))
-
+            build_relations('HadoopJobTracker')
+            build_relations('HadoopTaskTracker')
         else:
-            resourcemanager_property_names = (
-                'yarn.resourcemanager.webapp.address'
-            )
-            resourcemanager = self._prep_ip(
-                device, self._get_attr(resourcemanager_property_names, results)
-            )
-            log.debug('Resource Manager: %s' % resourcemanager)
-            if resourcemanager:
-                maps['hadoop_resource_manager'].append(RelationshipMap(
-                    relname='hadoop_resource_manager',
-                    modname=MODULE_NAME['HadoopResourceManager'],
-                    objmaps=[
-                        ObjectMap({
-                            'id': prepId(resourcemanager),
-                            'title': resourcemanager,
-                            'node_type': 'Resource Manager',
-                        })
-                    ]))
-
-            nodemanager_property_names = (
-                'yarn.nodemanager.webapp.address'
-            )
-            nodemanager = self._prep_ip(
-                device, self._get_attr(nodemanager_property_names, results)
-            )
-            log.debug('Node Manager: %s' % nodemanager)
-            if nodemanager:
-                maps['hadoop_node_manager'].append(RelationshipMap(
-                    relname='hadoop_node_manager',
-                    modname=MODULE_NAME['HadoopNodeManager'],
-                    objmaps=[
-                        ObjectMap({
-                            'id': prepId(nodemanager),
-                            'title': nodemanager,
-                            'node_type': 'Node Manager',
-                        })
-                    ]))
-
-            jobhistory_property_names = (
-                'mapreduce.jobhistory.webapp.address'
-            )
-            jobhistory = self._prep_ip(
-                device, self._get_attr(jobhistory_property_names, results)
-            )
-            log.debug('Job History: %s' % jobhistory)
-            if nodemanager:
-                maps['hadoop_job_history'].append(RelationshipMap(
-                    relname='hadoop_job_history',
-                    modname=MODULE_NAME['HadoopJobHistory'],
-                    objmaps=[
-                        ObjectMap({
-                            'id': prepId(jobhistory),
-                            'title': jobhistory,
-                            'node_type': 'Job History',
-                        })
-                    ]))
+            build_relations('HadoopResourceManager')
+            build_relations('HadoopNodeManager')
+            build_relations('HadoopJobHistory')
 
             # Clear non-existing component events.
             # maps['device'].append(ObjectMap({
@@ -181,7 +139,6 @@ class HadoopServiceNode(CommandPlugin):
                 'Modeler %s finished processing data for device %s',
                 self.name(), device.id
             )
-        print list(chain.from_iterable(maps.itervalues()))
         return list(chain.from_iterable(maps.itervalues()))
 
     def _get_attr(self, attrs, result, default=""):
