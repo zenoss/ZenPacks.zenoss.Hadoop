@@ -156,17 +156,24 @@ class hadoop_parser(CommandParser):
                     else:
                         if value.get(item) is not None:
                             result.values.append((point, value[item]))
+                elif cmd.ds == "JobHistoryMonitor":
+                    if isinstance(item, tuple):
+                        if value.get(item[0]) is not None:
+                            result.values.append((
+                                point, value[item[0]][item[1]]
+                            ))
 
         add_event(result, cmd, MSG_SUCCESS)
         log.debug((cmd.ds, '<<<---datasource', result.values, '<<<---result'))
 
         # Nodes remodeling.
         if cmd.ds == "NameNodeMonitor":
-            maps = self.data_nodes_remodel(data)
+            dev_id = cmd.deviceConfig.id
+            maps = self.data_nodes_remodel(data, dev_id)
             self.apply_maps(cmd, maps=maps)
         return result
 
-    def data_nodes_remodel(self, data):
+    def data_nodes_remodel(self, data, dev_id):
         """
         Create RelationshipMap for data nodes remodeling.
 
@@ -180,7 +187,7 @@ class hadoop_parser(CommandParser):
                 for key, val in (('LiveNodes', NODE_HEALTH_NORMAL),
                                  ('DeadNodes', NODE_HEALTH_DEAD),
                                  ('DecomNodes', NODE_HEALTH_DECOM)):
-                    nodes_oms.extend(node_oms(log, value.get(key), val, True))
+                    nodes_oms.extend(node_oms(log, dev_id, value.get(key), val, True))
         return [RelationshipMap(
                 relname='hadoop_data_nodes',
                 modname=MODULE_NAME['HadoopDataNode'],

@@ -24,7 +24,7 @@ class TestParser(BaseTestCase):
         self.cmd = Mock()
         self.cmd.result.exitCode = 0
         self.cmd.result.output = load_data('test_data_for_parser.txt')
-        self.cmd.id = 'live_nodes_count'
+        self.cmd.id = 'LiveNodes'
         self.cmd.points = [self.cmd]
         self.cmd.ds = "NameNodeMonitor"
 
@@ -70,7 +70,8 @@ class TestParser(BaseTestCase):
             hadoop_parser().processResults(
                 self.cmd, self.result
             ).events[2]['summary'],
-            'Error parsing collected data: No monitoring data received.'
+            'Error parsing collected data: No monitoring data received for {}.'
+            .format(self.cmd.name)
         )
 
 

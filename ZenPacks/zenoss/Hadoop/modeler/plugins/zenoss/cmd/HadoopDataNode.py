@@ -46,13 +46,16 @@ class HadoopDataNode(CommandPlugin):
             if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':
                 log.debug('Collecting live nodes')
                 nodes_oms.extend(
-                    node_oms(log, bean["LiveNodes"], NODE_HEALTH_NORMAL))
+                    node_oms(
+                        log, device.id, bean["LiveNodes"], NODE_HEALTH_NORMAL))
                 log.debug('Collecting dead nodes')
                 nodes_oms.extend(
-                    node_oms(log, bean["DeadNodes"], NODE_HEALTH_DEAD))
+                    node_oms(
+                        log, device.id, bean["DeadNodes"], NODE_HEALTH_DEAD))
                 log.debug('Collecting decommissioned nodes')
                 nodes_oms.extend(
-                    node_oms(log, bean["DecomNodes"], NODE_HEALTH_DECOM))
+                    node_oms(
+                        log, device.id, bean["DecomNodes"], NODE_HEALTH_DECOM))
 
         maps['hadoop_data_nodes'].append(RelationshipMap(
             relname='hadoop_data_nodes',

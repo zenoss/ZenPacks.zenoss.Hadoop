@@ -21,23 +21,24 @@ NODE_HEALTH_DEAD = 'Dead'
 NODE_HEALTH_DECOM = 'Decommissioned'
 
 
-def node_oms(log, data, state, remodel=False):
+def node_oms(log, dev_id, data, state, remodel=False):
     """Builds node OMs"""
     maps = []
     nodes = json.loads(data)
     for node_name, node_data in nodes.iteritems():
         log.debug(node_name)
+        node_id = dev_id + NAME_SPLITTER + node_name
         # Do not update 'last_contacted' property on remodeling
         # to avoid 'Change/Set' events, as it changes a lot.
         if remodel:
             maps.append(ObjectMap({
-                'id': prepId(node_name),
+                'id': prepId(node_id),
                 'title': node_name,
                 'health_state': state,
             }))
         else:
             maps.append(ObjectMap({
-                'id': prepId(node_name),
+                'id': prepId(node_id),
                 'title': node_name,
                 'health_state': state,
                 'last_contacted': node_data['lastContact']

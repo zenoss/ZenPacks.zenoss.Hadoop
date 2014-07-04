@@ -113,7 +113,9 @@ class HadoopServiceNode(CommandPlugin):
                     modname=MODULE_NAME[component],
                     objmaps=[
                         ObjectMap({
-                            'id': prepId(component_name),
+                            'id': prepId(
+                                device.id + NAME_SPLITTER + component_name
+                            ),
                             'title': component_name,
                             'node_type': data[0],
                         })
