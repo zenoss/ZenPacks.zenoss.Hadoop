@@ -48,12 +48,6 @@ class HadoopComponentsTestCase(BaseTestCase):
         self.d.dmd._p_jar = MockJar()
         self.applyDataMap = ApplyDataMap()._applyDataMap
 
-        # # Mock clear events function.
-        # from Products.ZenModel.Device import Device
-        # mock = lambda *args, **kwargs: None
-        # Device.getClearEvents = mock
-        # Device.setClearEvents = mock
-
     def _loadZenossData(self):
         if hasattr(self, '_loaded'):
             return
@@ -144,15 +138,6 @@ class HadoopModelerHelpersTestCase(BaseTestCase):
             self.s_modeler._get_attr(attr, data), '192.192.0.0:50030'
         )
         self.assertEquals(self.s_modeler._get_attr('test', data), '')
-
-    def test_prep_ip(self):
-        device = Mock()
-        prep_ip = self.s_modeler._prep_ip(device, '192.192.0.0:50030')
-        self.assertEquals(prep_ip, '192.192.0.0:50030')
-
-        device.manageIp = '10.10.10.10'
-        prep_ip = self.s_modeler._prep_ip(device, '0.0.0.0:50030')
-        self.assertEquals(prep_ip, '10.10.10.10:50030')
 
 
 def test_suite():

@@ -32,13 +32,10 @@ class HadoopDataNode(CommandPlugin):
         log.info('Collecting Hadoop nodes for device %s' % device.id)
 
         maps = collections.OrderedDict([
-            # ('hadoop_service_nodes', []),
             ('hadoop_data_nodes', []),
         ])
 
         # TODO: add try ... except on below code to catch bad-data
-
-        # print results
 
         data = json.loads(results)
         nodes_oms = []
@@ -61,11 +58,6 @@ class HadoopDataNode(CommandPlugin):
             relname='hadoop_data_nodes',
             modname=MODULE_NAME['HadoopDataNode'],
             objmaps=nodes_oms))
-
-        # Clear non-existing component events.
-        # maps['device'].append(ObjectMap({
-        #     'getClearEvents': True
-        # }))
 
         log.info(
             'Modeler %s finished processing data for device %s',

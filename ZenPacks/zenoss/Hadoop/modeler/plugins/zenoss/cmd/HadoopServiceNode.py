@@ -106,7 +106,7 @@ class HadoopServiceNode(CommandPlugin):
             """
             data = dict_components[component]
             component_name = self._get_attr(data[2], results)
-            log.debug(data[0] + ': {}'.format(component_name))
+            log.debug('{0}: {1}'.format(data[0], component_name))
             if component_name:
                 maps[data[1]].append(RelationshipMap(
                     relname=data[1],
@@ -132,15 +132,10 @@ class HadoopServiceNode(CommandPlugin):
             build_relations('HadoopNodeManager')
             build_relations('HadoopJobHistory')
 
-            # Clear non-existing component events.
-            # maps['device'].append(ObjectMap({
-            #     'getClearEvents': True
-            # }))
-
-            log.info(
-                'Modeler %s finished processing data for device %s',
-                self.name(), device.id
-            )
+        log.info(
+            'Modeler %s finished processing data for device %s',
+            self.name(), device.id
+        )
         return list(chain.from_iterable(maps.itervalues()))
 
     def _get_attr(self, attrs, result, default=""):
@@ -159,14 +154,3 @@ class HadoopServiceNode(CommandPlugin):
             if prop.findtext('name') in attrs:
                 return prop.findtext('value')
         return default
-
-    def _prep_ip(self, device, val):
-        """Check if node IP is equal to host and replace with host's IP"""
-        if not val:
-            return ""
-
-        ip, port = val.split(":")
-        if ip == "0.0.0.0":
-            ip = device.manageIp
-
-        return ip + ":" + port
