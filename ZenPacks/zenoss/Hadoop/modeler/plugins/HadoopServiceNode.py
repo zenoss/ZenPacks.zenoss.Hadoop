@@ -11,24 +11,66 @@ import json
 import collections
 from itertools import chain
 import xml.etree.cElementTree as ET
+import zope.component
 
 from Products.ZenUtils.Utils import prepId
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
-from Products.DataCollector.plugins.CollectorPlugin import CommandPlugin
-
+from Products.ZenCollector.interfaces import IEventService
+from Products.DataCollector.plugins.CollectorPlugin import PythonPlugin
+from twisted.web.client import getPage
+from twisted.internet import defer
 from ZenPacks.zenoss.Hadoop import MODULE_NAME
-from ZenPacks.zenoss.Hadoop.utils import NAME_SPLITTER
+from ZenPacks.zenoss.Hadoop.utils import \
+    NAME_SPLITTER, hadoop_url, hadoop_headers, get_attr, prep_ip
 
 
-class HadoopServiceNode(CommandPlugin):
+class HadoopServiceNode(PythonPlugin):
     """
-    A command plugin for Hadoop to look for Job Tracker / Secondary
+    A python plugin for Hadoop to look for Job Tracker / Secondary
     Name nodes
     """
-    command = ("/usr/bin/curl -s http://localhost:50070/conf &&"
-               " /usr/bin/curl -s http://localhost:50070/jmx")
 
-    def process(self, device, results, log):
+    deviceProperties = PythonPlugin.deviceProperties + (
+        'zHadoopScheme',
+        'zHadoopUsername',
+        'zHadoopPassword',
+        'zHadoopNameNodePort',
+    )
+    _eventService = zope.component.queryUtility(IEventService)
+
+    @defer.inlineCallbacks
+    def collect(self, device, log):
+
+        result = {}
+
+        jmx_url = hadoop_url(
+            scheme=device.zHadoopScheme,
+            port=device.zHadoopNameNodePort,
+            host=device.manageIp,
+            endpoint='/jmx'
+        )
+        conf_url = hadoop_url(
+            scheme=device.zHadoopScheme,
+            port=device.zHadoopNameNodePort,
+            host=device.manageIp,
+            endpoint='/conf'
+        )
+        headers = hadoop_headers(
+            accept='application/json',
+            username=device.zHadoopUsername,
+            passwd=device.zHadoopPassword
+        )
+
+        try:
+            result['jmx'] = yield getPage(jmx_url, headers=headers)
+            result['conf'] = yield getPage(conf_url, headers=headers)
+        except Exception, e:
+            self.on_error(log, device, e)
+        self.on_success(log, device)
+        defer.returnValue(result)
+
+    def process(self, device, result, log):
+
         log.info('Collecting Hadoop nodes for device %s' % device.id)
 
         maps = collections.OrderedDict([
@@ -89,10 +131,9 @@ class HadoopServiceNode(CommandPlugin):
         }
 
         try:
-            result = results.split('</configuration>')
-            results = ET.fromstring(result[0] + '</configuration>')
-            data = json.loads(result[1])
-        except (TypeError, IndexError, ValueError, ET.ParseError) as err:
+            results = ET.fromstring(result['conf'])
+            data = json.loads(result['jmx'])
+        except (TypeError, KeyError, ValueError, ET.ParseError):
             log.error('Modeler %s failed to parse the result.' % self.name())
             return
 
@@ -105,7 +146,9 @@ class HadoopServiceNode(CommandPlugin):
             Receive component's name and build relationships to device
             """
             data = dict_components[component]
-            component_name = self._get_attr(data[2], results)
+            component_name = prep_ip(
+                device, get_attr(data[2], results), results
+            )
             log.debug('{0}: {1}'.format(data[0], component_name))
             if component_name:
                 maps[data[1]].append(RelationshipMap(
@@ -138,19 +181,39 @@ class HadoopServiceNode(CommandPlugin):
         )
         return list(chain.from_iterable(maps.itervalues()))
 
-    def _get_attr(self, attrs, result, default=""):
-        """
-        Look for the attribute in configuration data.
+    def on_error(self, log, device, failure):
 
-        @param attrs: possible names of the attribute in conf data
-        @type attrs: tuple
-        @param result: parsed result of command output
-        @type result: ET Element object
-        @param default: optional, a value to be returned as a default
-        @type default: str
-        @return: the attribute value
+        try:
+            e = failure.value
+        except:
+            e = failure  # no twisted failure
+        log.error(e)
+        self._send_event(str(e).capitalize(), device.id, 5)
+        raise e
+
+    def on_success(self, log, device):
+        log.info('Successfull modeling')
+        self._send_event("Successfull modeling", device.id, 0)
+
+    def _send_event(self, reason, id, severity, force=False):
+
         """
-        for prop in result.findall('property'):
-            if prop.findtext('name') in attrs:
-                return prop.findtext('value')
-        return default
+        Send event for device with specified id, severity and
+        error message.
+        """
+
+        if self._eventService:
+
+            self._eventService.sendEvent(dict(
+                summary=reason,
+                eventClass='/Status',
+                device=id,
+                eventKey='ConnectionError',
+                severity=severity,
+            ))
+            return True
+        else:
+            if force or (severity > 0):
+                self.device_om = ObjectMap({
+                    'setErrorNotification': reason
+                })

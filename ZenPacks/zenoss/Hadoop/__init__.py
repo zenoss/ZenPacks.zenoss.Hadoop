@@ -10,7 +10,6 @@
 Custom ZenPack initialization code. All code defined in this module will be
 executed at startup time in all Zope clients.
 """
-import math
 import logging
 log = logging.getLogger('zen.Hadoop')
 
@@ -18,12 +17,11 @@ import Globals
 
 from zope.event import notify
 
-from Products.ZenEvents.EventManagerBase import EventManagerBase
 from Products.ZenModel.Device import Device
 from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
 from Products.ZenRelations.zPropertyCategory import setzPropertyCategory
-from Products.ZenUtils.Utils import unused, monkeypatch
+from Products.ZenUtils.Utils import unused
 from Products.ZenUtils.IpUtil import getHostByName
 from Products.Zuul.interfaces import ICatalogTool
 from Products.Zuul.catalog.events import IndexingEvent
@@ -35,6 +33,10 @@ unused(Globals)
 # setzPropertyCategory('zHadoop', 'Hadoop')
 setzPropertyCategory('zHbaseAutodiscover', 'Hadoop')
 setzPropertyCategory('zHbaseDeviceClass', 'Hadoop')
+setzPropertyCategory('zHadoopScheme', 'Hadoop')
+setzPropertyCategory('zHadoopUsername', 'Hadoop')
+setzPropertyCategory('zHadoopPassword', 'Hadoop')
+setzPropertyCategory('zHadoopNameNodePort', 'Hadoop')
 
 
 # Modules containing model classes. Used by zenchkschema to validate
@@ -97,7 +99,7 @@ def setErrorNotification(self, msg):
             eventClass='/Status',
             eventKey='ConnectionError',
             severity=0,
-            ))
+        ))
     else:
         self.dmd.ZenEventManager.sendEvent(dict(
             device=self.id,
@@ -105,7 +107,7 @@ def setErrorNotification(self, msg):
             eventClass='/Status',
             eventKey='ConnectionError',
             severity=5,
-            ))
+        ))
 
     return
 
@@ -126,7 +128,6 @@ def setHBaseAutodiscover(self, node_name):
     for node in self.hadoop_data_nodes():
         if node.hbase_device_id == node_name:
             # Nothing changed
-            # print "Nothing changed"
             return
 
     # b) Lookup for old HBase node
@@ -138,8 +139,7 @@ def setHBaseAutodiscover(self, node_name):
             break
 
     if old_hbase_device:
-        # print "Old HBase device exists ", old_hbase_device
-        # print "Changing IP to", node_name
+        # Changing IP to node_name
         hbase_device = old_hbase_device
         hbase_device.setManageIp(node_name)
 
@@ -155,21 +155,27 @@ def setHBaseAutodiscover(self, node_name):
             return
 
         hbase_device = self.findDevice(ip)
-        # print ip
-        # print hbase_device
+
         if hbase_device:
             log.info("HBase device found in existing devices")
         else:
-            # print "Created"
+            # Check if HBase ZenPack is installed
+            try:
+                self.zHBasePassword
+            except AttributeError:
+                log.warn("HBase ZenPack is requaried")
+                return
+
             log.info("HBase device created")
             hbase_device = dc.createInstance(ip)
             hbase_device.title = node_name
             hbase_device.setManageIp(ip)
-            # hbase_device.setProdState(self._running_prodstate)
             hbase_device.setPerformanceMonitor(self.getPerformanceServer().id)
             hbase_device.index_object()
-            hbase_device.zCollectorPlugins.extend(
-                ['zHBaseCollector', 'zHBaseTableCollector']
+            hbase_device.zCollectorPlugins = list(
+                hbase_device.zCollectorPlugins
+            ).extend(
+                ['HBaseCollector', 'HBaseTableCollector']
             )
             hbase_device.zHBasePassword = self.zHBasePassword
             hbase_device.zHBaseUsername = self.zHBaseUsername
@@ -183,7 +189,7 @@ def setHBaseAutodiscover(self, node_name):
 
     # Setting HBase device ID as node property for back link from UI
     for node in self.hadoop_data_nodes():
-        if node.title == node_name:
+        if str(node.title).split(':')[0] == node_name:
             node.hbase_device_id = hbase_device.id
             node.index_object()
 
@@ -200,30 +206,18 @@ Device.setHBaseAutodiscover = setHBaseAutodiscover
 Device.getHBaseAutodiscover = getHBaseAutodiscover
 
 
-# @monkeypatch('Products.ZenCollector.services.config.CollectorConfigService')
-@monkeypatch('Products.ZenHub.services.CommandPerformanceConfig.CommandPerformanceConfig')
-def remote_applyDataMaps(self, device, datamaps):
-    from Products.DataCollector.ApplyDataMap import ApplyDataMap
-    device = self.getPerformanceMonitor().findDevice(device)
-    applicator = ApplyDataMap(self)
-
-    changed = False
-    for datamap in datamaps:
-        if applicator._applyDataMap(device, datamap):
-            changed = True
-
-    return changed
-
-
 class ZenPack(ZenPackBase):
     """
     ZenPack loader that handles custom installation and removal tasks.
     """
 
     packZProperties = [
-        # ('zHadoop', False, 'bool'),
         ('zHbaseAutodiscover', False, 'bool'),
         ('zHbaseDeviceClass', '/Server/Linux', 'string'),
+        ('zHadoopScheme', 'http', 'string'),
+        ('zHadoopUsername', '', 'string'),
+        ('zHadoopPassword', '', 'string'),
+        ('zHadoopNameNodePort', '50070', 'string'),
     ]
 
     def install(self, app):

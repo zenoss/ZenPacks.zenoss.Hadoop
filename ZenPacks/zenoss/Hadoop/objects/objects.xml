@@ -12,30 +12,24 @@
       Products.ZenModel.Device
     </property>
     <tomanycont id="datasources">
-      <object class="BasicDataSource" id="NameNodeMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="NameNodeMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
+        <property id="component" mode="w" type="string">
+          ${here/id}
         </property>
         <property id="severity" mode="w" type="int">
-          2
+          3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${dev/manageIp}:50070/jmx
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopPlugin
         </property>
         <tomanycont id="datapoints">
           <object class="RRDDataPoint" id="DeadNodes" module="Products.ZenModel.RRDDataPoint">
@@ -507,9 +501,9 @@
       Products.ZenModel.Device
     </property>
     <tomanycont id="datasources">
-      <object class="BasicDataSource" id="DataNodeMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="DataNodeMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
@@ -517,23 +511,14 @@
         <property id="component" mode="w" type="string">
           ${here/id}
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
         <property id="severity" mode="w" type="int">
           3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${here/title}:50075/jmx
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopPlugin
         </property>
         <tomanycont id="datapoints">
           <object class="RRDDataPoint" id="blocks_read" module="Products.ZenModel.RRDDataPoint">
@@ -594,9 +579,9 @@
           </object>
         </tomanycont>
       </object>
-      <object class="BasicDataSource" id="HBaseDiscoverMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="HBaseDiscoverMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
@@ -604,23 +589,14 @@
         <property id="component" mode="w" type="string">
           ${here/id}
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
         <property id="severity" mode="w" type="int">
           3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${here/title}:60010/
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopHBasePlugin
         </property>
       </object>
     </tomanycont>
@@ -929,9 +905,9 @@
       Products.ZenModel.Device
     </property>
     <tomanycont id="datasources">
-      <object class="BasicDataSource" id="JobHistoryMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="JobHistoryMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
@@ -939,23 +915,14 @@
         <property id="component" mode="w" type="string">
           ${here/id}
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
         <property id="severity" mode="w" type="int">
           3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${here/title}/jmx
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopPlugin
         </property>
         <tomanycont id="datapoints">
           <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
@@ -1186,9 +1153,9 @@
       Products.ZenModel.Device
     </property>
     <tomanycont id="datasources">
-      <object class="BasicDataSource" id="JobTrackerMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="JobTrackerMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
@@ -1196,23 +1163,14 @@
         <property id="component" mode="w" type="string">
           ${here/id}
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
         <property id="severity" mode="w" type="int">
-          2
+          3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${here/title}/jmx
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopPlugin
         </property>
         <tomanycont id="datapoints">
           <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
@@ -1715,9 +1673,9 @@
       Products.ZenModel.Device
     </property>
     <tomanycont id="datasources">
-      <object class="BasicDataSource" id="NodeManagerMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="NodeManagerMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
@@ -1725,23 +1683,14 @@
         <property id="component" mode="w" type="string">
           ${here/id}
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
         <property id="severity" mode="w" type="int">
           3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${here/title}/jmx
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopPlugin
         </property>
         <tomanycont id="datapoints">
           <object class="RRDDataPoint" id="ContainersCompleted" module="Products.ZenModel.RRDDataPoint">
@@ -2216,9 +2165,9 @@
       Products.ZenModel.Device
     </property>
     <tomanycont id="datasources">
-      <object class="BasicDataSource" id="ResourceManagerMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="ResourceManagerMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
@@ -2226,23 +2175,14 @@
         <property id="component" mode="w" type="string">
           ${here/id}
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
         <property id="severity" mode="w" type="int">
           3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${here/title}/jmx
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopPlugin
         </property>
         <tomanycont id="datapoints">
           <object class="RRDDataPoint" id="AppsCompleted" module="Products.ZenModel.RRDDataPoint">
@@ -2868,9 +2808,9 @@
       Products.ZenModel.Device
     </property>
     <tomanycont id="datasources">
-      <object class="BasicDataSource" id="SecondaryNameNodeMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="SecondaryNameNodeMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
@@ -2878,23 +2818,14 @@
         <property id="component" mode="w" type="string">
           ${here/id}
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
         <property id="severity" mode="w" type="int">
           3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${here/title}/jmx
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopPlugin
         </property>
         <tomanycont id="datapoints">
           <object class="RRDDataPoint" id="heap_memory_capacity_bytes" module="Products.ZenModel.RRDDataPoint">
@@ -3125,9 +3056,9 @@
       Products.ZenModel.Device
     </property>
     <tomanycont id="datasources">
-      <object class="BasicDataSource" id="TaskTrackerMonitor" module="Products.ZenModel.BasicDataSource">
+      <object class="PythonDataSource" id="TaskTrackerMonitor" module="ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource">
         <property id="sourcetype" mode="w" select_variable="sourcetypes" type="selection">
-          COMMAND
+          Python
         </property>
         <property id="enabled" mode="w" type="boolean">
           True
@@ -3135,23 +3066,14 @@
         <property id="component" mode="w" type="string">
           ${here/id}
         </property>
-        <property id="eventClass" mode="w" type="string">
-          /Cmd/Fail
-        </property>
         <property id="severity" mode="w" type="int">
           3
         </property>
-        <property id="commandTemplate" mode="w" type="string">
-          /usr/bin/curl -s http://${here/title}/jmx
+        <property id="cycletime" mode="w" type="string">
+          ${here/zWinPerfmonInterval}
         </property>
-        <property id="cycletime" mode="w" type="int">
-          300
-        </property>
-        <property id="usessh" mode="w" type="boolean">
-          True
-        </property>
-        <property id="parser" mode="w" type="string">
-          ZenPacks.zenoss.Hadoop.parsers.hadoop_parser
+        <property id="plugin_classname" mode="w" type="string">
+          ZenPacks.zenoss.Hadoop.dsplugins.HadoopPlugin
         </property>
         <tomanycont id="datapoints">
           <object class="RRDDataPoint" id="maps_running" module="Products.ZenModel.RRDDataPoint">
