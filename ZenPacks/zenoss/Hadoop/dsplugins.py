@@ -236,67 +236,25 @@ class HadoopPlugin(PythonDataSourcePlugin):
                 if points_to_convert.get(point.id) else point.id
 
             for value in data.get('beans'):
+                if isinstance(item, tuple):
+                    if value.get(item[0]) is not None:
+                        result[point.id] = (value[item[0]][item[1]], 'N')
+                else:
+                    if value.get(item) is not None:
+                        result[point.id] = (value[item], 'N')
                 if ds.datasource == "NameNodeMonitor":
-                    if isinstance(item, tuple):
-                        if value.get(item[0]) is not None:
-                            result[point.id] = (value[item[0]][item[1]], 'N')
-                    else:
-                        if value.get(item) is not None:
-                            if isinstance(value[item], unicode):
-                                result[point.id] = (
-                                    len(json.loads(value[item])), 'N'
-                                )
-                            else:
-                                result[point.id] = (value[item], 'N')
+                    if value.get(item) is not None:
+                        if isinstance(value[item], unicode):
+                            result[point.id] = (
+                                len(json.loads(value[item])), 'N'
+                            )
                 elif ds.datasource == "DataNodeMonitor":
-                    if isinstance(item, tuple):
-                        if value.get(item[0]) is not None:
-                            result[point.id] = (value[item[0]][item[1]], 'N')
-                    else:
-                        if value.get(item) is not None:
-                            result[point.id] = (value[item], 'N')
-                        elif value.get(point.id) is not None:
-                            result[point.id] = (value[point.id], 'N')
-                elif ds.datasource == "TaskTrackerMonitor":
-                    if isinstance(item, tuple):
-                        if value.get(item[0]) is not None:
-                            result[point.id] = (value[item[0]][item[1]], 'N')
-                    else:
-                        if value.get(item) is not None:
-                            result[point.id] = (value[item], 'N')
+                    if value.get(point.id) is not None:
+                        result[point.id] = (value[point.id], 'N')
                 elif ds.datasource == 'JobTrackerMonitor':
-                    if isinstance(item, tuple):
-                        if value.get(item[0]) is not None:
-                            result[point.id] = (value[item[0]][item[1]], 'N')
-                    else:
-                        if value.get('modelerType') == 'JobTrackerMetrics':
-                            if value.get(item) is not None:
-                                result[point.id] = (value[item], 'N')
-                elif ds.datasource == 'SecondaryNameNodeMonitor':
-                    if isinstance(item, tuple):
-                        if value.get(item[0]) is not None:
-                            result[point.id] = (value[item[0]][item[1]], 'N')
-                    else:
+                    if value.get('modelerType') == 'JobTrackerMetrics':
                         if value.get(item) is not None:
                             result[point.id] = (value[item], 'N')
-                elif ds.datasource == "NodeManagerMonitor":
-                    if isinstance(item, tuple):
-                        if value.get(item[0]) is not None:
-                            result[point.id] = (value[item[0]][item[1]], 'N')
-                    else:
-                        if value.get(item) is not None:
-                            result[point.id] = (value[item], 'N')
-                elif ds.datasource == "ResourceManagerMonitor":
-                    if isinstance(item, tuple):
-                        if value.get(item[0]) is not None:
-                            result[point.id] = (value[item[0]][item[1]], 'N')
-                    else:
-                        if value.get(item) is not None:
-                            result[point.id] = (value[item], 'N')
-                elif ds.datasource == "JobHistoryMonitor":
-                    if isinstance(item, tuple):
-                        if value.get(item[0]) is not None:
-                            result[point.id] = (value[item[0]][item[1]], 'N')
         return result
 
 
