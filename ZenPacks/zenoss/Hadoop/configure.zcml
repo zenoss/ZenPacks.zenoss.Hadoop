@@ -89,6 +89,30 @@
             factory=".impact.HadoopJobTrackerRelationsProvider"
             />
 
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopTaskTracker.HadoopTaskTracker"
+            factory=".impact.HadoopTaskTrackerRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopResourceManager.HadoopResourceManager"
+            factory=".impact.HadoopResourceManagerRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopNodeManager.HadoopNodeManager"
+            factory=".impact.HadoopNodeManagerRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopJobHistory.HadoopJobHistory"
+            factory=".impact.HadoopJobHistoryRelationsProvider"
+            />
+
     </configure>
 
 </configure>
