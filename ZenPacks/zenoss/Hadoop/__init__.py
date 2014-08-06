@@ -21,7 +21,7 @@ from Products.ZenModel.Device import Device
 from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
 from Products.ZenRelations.zPropertyCategory import setzPropertyCategory
-from Products.ZenUtils.Utils import unused
+from Products.ZenUtils.Utils import unused, monkeypatch
 from Products.ZenUtils.IpUtil import getHostByName
 from Products.Zuul.interfaces import ICatalogTool
 from Products.Zuul.catalog.events import IndexingEvent
@@ -198,6 +198,26 @@ def setHBaseAutodiscover(self, node_name):
 
 def getHBaseAutodiscover(self):
     return True
+
+
+@monkeypatch('Products.ZenModel.Device.Device')
+def getRRDTemplates(self):
+    """
+    Returns all the templates bound to this Device and
+    add Hadoop monitoring template if HadoopDataNode or
+    HadoopServiceNode collectors are used.
+    """
+
+    result = original(self)
+    # Check if 'Hadoop' monitoring template is bound to device and bind if not
+    if filter(lambda x: 'Hadoop' in x.id, result):
+        return result
+
+    collectors = self.getProperty('zCollectorPlugins')
+    if 'HadoopDataNode' in collectors or 'HadoopServiceNode' in collectors:
+        self.bindTemplates([x.id for x in result] + ['Hadoop'])
+        result = original(self)
+    return result
 
 
 Device.setErrorNotification = setErrorNotification
