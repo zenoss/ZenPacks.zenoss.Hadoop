@@ -21,7 +21,7 @@
 }}
 
 The <span class="zenpack">ZenPacks.zenoss.Hadoop</span> ZenPack monitors Hadoop clusters 
-via JMX web interface (''JMXJsonServlet'') with secure access over SSH.
+via JMX web interface (''JMXJsonServlet'') .
 
 __TOC__
 
@@ -39,10 +39,19 @@ They are each detailed further below.
 The following values are discovered through zProperties you provide:
 ; Hadoop Data Node
 : ''Attributes'': Name, Last Contacted, Health State
-; Hadoop Job Tracker
-: ''Attributes'': Name, Last Contacted, Health State
 ; Hadoop Secondery Name Node
-: ''Attributes'': Name, Last Contacted, Health State
+: ''Attributes'': Name, Health State
+; Hadoop Job Tracker
+: ''Attributes'': Name, Health State
+; Hadoop Task Tracker
+: ''Attributes'': Name, Health State
+; Hadoop Resource Manager
+: ''Attributes'': Name, Health State
+; Hadoop Node Manager
+: ''Attributes'': Name, Health State
+; Hadoop Job History
+: ''Attributes'': Name, Health State
+{{note}} Yarn(Resource Manager, Node Manager, Job History) will be modeled for Hadoop 2* version and MapReduce(Job Tracker, Task Tracker) for early versions accordingly.
 === Performance Monitoring ===
 The following metrics will be collected and graphed every 5 minutes by default:
 ; Device (Hadoop Name Node)
@@ -52,47 +61,62 @@ The following metrics will be collected and graphed every 5 minutes by default:
 ; Hadoop Data Node
 : ''Blocks'': Blocks Written, Blocks Read, Blocks Removed
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
+; Hadoop Secondery Name Node
+: ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
+; Hadoop Task Tracker
 : ''Tasks'': Tasks Completed, Tasks Failed Timeout, Tasks Failed Ping
 : ''Performance metrics'': Reduces Running, Maps Running
 ; Hadoop Job Tracker
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
 : ''Jobs'': Jobs Running, Jobs Failed, Jobs Completed
 : ''Performance metrics'': Reduces Running, Maps Running
-; Hadoop Secondery Name Node
+; Hadoop Resource Manager
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
+: ''Nodes'': Active Nodes, Decommissioned Nodes, Lost Nodes  Unhealthy Nodes, Rebooted Nodes
+: ''Apps'': Apps Submitted, Apps Pending, Apps Running, Apps Completed
+; Hadoop Node Manager
+: ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
+: ''Containers'': Containers Running, Containers Launched, Containers Completed, Containers Failed, Containers Initing, Containers Killed
+; Hadoop Job History
+: ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
+
 === Event monitoring ===
 The following events will be triggered with respect to the monitored metrics:
 ; Device (Hadoop Name Node)
 : ''Error'': No data received.
 ; Hadoop Data Node
 : ''Error'': The node is down.
-; Hadoop Job Tracker
-: ''Error'': The job tracker is down.
 ; Hadoop Secondery Name Node
 : ''Error'': The node is down.
+; Hadoop Job Tracker
+: ''Error'': The job tracker is down.
+; Hadoop Task Tracker
+: ''Error'': The task tracker is down.
+; Hadoop Resource Manager
+: ''Error'': The resource manager is down.
+; Hadoop Node Manager
+: ''Error'': The node manager is down.
+; Hadoop Job History
+: ''Error'': The job history is down.
+
 === Service Impact ===
 When combined with the Zenoss Service Dynamics product, this ZenPack adds
 built-in service impact capability for Hadoop. The following service impact
 relationships are automatically added. These will be included in any services
 containing one or more of the explicitly mentioned entities.
 ;Service Impact Relationships
-* Data Node, Secondery Name Node or Job Tracker failure affects related device.
+* Data Node, Secondery Name Node, Job Tracker, Task Tracker, Resource Manager, Node Manager or Job History failure affects related device.
 == Usage ==
 Use the following steps to start monitoring Hadoop cluster:
 # Select ''Infrastructure'' from the navigation bar.
 # Click the device name in the device list. The device overview page appears.
 # Select ''Configuration Properties'' from the left panel.
-# Set the ''zCommandUsername'' and ''zCommandPassword''  to setup SSH access.
-# Navigate to the ''Modeler plugins'' page of the device containing your Hadoop server, add the ''zenoss.cmd.HadoopDataNode'' and ''zenoss.cmd.HadoopServiceNode'' modeler plugins.
-# Select ''Bind Templates'' from the Action menu. The ''Bind Templates'' dialog appears.
-# Add the ''Hadoop'' template to the list of selected templates, and then click ''Submit''.
+# Set the ''zHadoopUsername'' and ''zHadoopPassword''  to setup access.
+# Set the port number to ''zHadoopNameNodePort'' if it differes from the default one. 
+# Set the ''zHbaseAutodiscover'' to setup discovering Hbase on Hadoop data nodes.
+# Set the device class for discovered HBase to value of ''zHbaseDeviceClass'' if it differes from the default one.
+# Navigate to the ''Modeler plugins'' page of the device containing your Hadoop server, add the ''HadoopDataNode'' and ''HadoopServiceNode'' modeler plugins.
 
-{{note}} The ''zCommandUsername'' property must be set. To use public key authentication you 
-must verify that the public portion of the key referenced in ''zKeyPath'' is installed in 
-the <code>~/.ssh/authorized_keys</code> file for the appropriate user on the Hadoop server machine. 
-If this key has a passphrase you should set it in the ''zCommandPassword'' property. 
-If you'd rather use password authentication than setup keys, simply put the user's 
-password in the ''zCommandPassword'' property.
 ----
 
 
@@ -101,38 +125,17 @@ To do this, you must create a text file with hostname, username and password of 
 servers you want to add. The devices shuld be added under the the tagget machine device class
 (e.g. '/Devices/Server/Linux' in the example below).
 <syntaxhighlight lang="text">
-/Devices/Server/Linux zCollectorPlugins=['zenoss.cmd.HadoopDataNode', 'zenoss.cmd.HadoopServiceNode'], zDeviceTemplates=['Hadoop']
-<HOST NAME> zCommandUsername='<USERNAME>', zCommandPassword='<PASSWORD>'
+/Devices/Server/Linux zCollectorPlugins=['HadoopDataNode', 'HadoopServiceNode']
+<HOST NAME> zHadoopUsername='<USERNAME>', zHadoopPassword='<PASSWORD>'
 </syntaxhighlight>
 You can then load the Hadoop monitoring servers into Zenoss Core or Resource Manager as devices with the following command.
 <console>
 $ ##i##zenbatchload <filename>
 </console>
 == Prerequisites ==
-This ZenPack uses the default web UI ports for Hadoop performance monitoring,
-therefore please make sure that they were not changed in the ''conf/core-site.xml'' 
-and the UI instance is running.
+This ZenPack uses the web UI ports for Hadoop performance monitoring,
+therefore please make sure that the UI instance is running.
 
-The default ports used for Hadoop monitoring are as follows:
-{| class="wikitable"
-!width="50%"|Daemon
-!width="50%"|Port
-|-
-|Namenode 
-|50070
-|-
-|Datanodes 
-|50075
-|-
-|Secondarynamenode 
-|50090
-|-
-|Jobracker 
-|50030
-|-
-|Tasktrackers
-|50060
-|}
 == Troubleshooting ==
 Please refer the the Zenoss Service Dynamics documentation if you run into
 any of the following problems:
@@ -146,24 +149,33 @@ Core users can use the #zenoss IRC channel or the community.zenoss.org forums.
 == Installed Items ==
 Installing this ZenPack will add the following items to your Zenoss system.
 ;Modeler Plugins
-* zenoss.cmd.HadoopDataNode
-* zenoss.cmd.HadoopServiceNode
+* HadoopDataNode
+* HadoopServiceNode
 ;Monitoring Templates
-* Hadoop (in /Server)
-* HadoopDataNode (in /Server)
-* HadoopJobTracker (in /Server)
-* HadoopSecondaryNameNode (in /Server)
+* Hadoop (in /Device)
+* HadoopDataNode (in /Device)
+* HadoopSecondaryNameNode (in /Device)
+* HadoopJobTracker (in /Device)
+* HadoopTaskTracker (in /Device)
+* HadoopResourceManager (in /Device)
+* HadoopNodeManager (in /Device)
+* HadoopJobHistory (in /Device)
+* HBaseDiscoverMonitor (in /Device)
 ;Component Types
 * HadoopDataNode (on related device)
-* HadoopJobTracker (on related device)
 * HadoopSecondaryNameNode (on related device)
+* HadoopJobTracker (on related device)
+* HadoopTaskTracker (on related device)
+* HadoopResourceManager (on related device)
+* HadoopNodeManager (on related device)
+* HadoopJobHistory (on related device)
 == Daemons ==
 {| class="wikitable"
 !width="50%"|Type
 !width="50%"|Name
 |-
 |Performance Collector
-|zencommand
+|zenpython
 |}
 
 {{ZenPackFooter}}
