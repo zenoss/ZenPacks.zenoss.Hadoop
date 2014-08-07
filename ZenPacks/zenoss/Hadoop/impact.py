@@ -148,3 +148,23 @@ class HadoopSecondaryNameNodeRelationsProvider(BaseRelationsProvider):
 class HadoopJobTrackerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
     impact_relationships = ['hadoop_host']
+
+
+class HadoopTaskTrackerRelationsProvider(BaseRelationsProvider):
+    impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_host']
+
+
+class HadoopResourceManagerRelationsProvider(BaseRelationsProvider):
+    impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_host']
+
+
+class HadoopNodeManagerRelationsProvider(BaseRelationsProvider):
+    impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_host']
+
+
+class HadoopJobHistoryRelationsProvider(BaseRelationsProvider):
+    impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_host']

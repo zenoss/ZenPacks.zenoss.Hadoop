@@ -232,7 +232,7 @@ class ZenPack(ZenPackBase):
     """
 
     packZProperties = [
-        ('zHbaseAutodiscover', False, 'bool'),
+        ('zHbaseAutodiscover', False, 'boolean'),
         ('zHbaseDeviceClass', '/Server/Linux', 'string'),
         ('zHadoopScheme', 'http', 'string'),
         ('zHadoopUsername', '', 'string'),

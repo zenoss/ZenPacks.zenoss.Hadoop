@@ -146,7 +146,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Total Files
+              Total
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -206,7 +206,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -235,7 +235,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -295,7 +295,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Dead Nodes
+              Dead
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -324,7 +324,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Live Nodes
+              Live
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -384,7 +384,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -413,7 +413,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -647,7 +647,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Blocks Read
+              Read
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -676,7 +676,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Blocks Removed
+              Removed
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -705,7 +705,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Blocks Written
+              Written
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -765,7 +765,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -794,7 +794,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -854,7 +854,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -883,7 +883,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1007,7 +1007,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1036,7 +1036,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1096,7 +1096,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1125,7 +1125,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1295,7 +1295,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1324,7 +1324,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1384,7 +1384,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Jobs Completed
+              Completed
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1413,7 +1413,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Jobs Failed
+              Failed
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1442,7 +1442,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Jobs Running
+              Running
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1502,7 +1502,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Running Maps
+              Running
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1562,7 +1562,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1591,7 +1591,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1651,7 +1651,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Running Reduces
+              Running
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1784,6 +1784,9 @@
         <property id="width" mode="w" type="int">
           500
         </property>
+        <property id="units" mode="w" type="string">
+          Units
+        </property>
         <property id="log" mode="w" type="boolean">
           False
         </property>
@@ -1820,7 +1823,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Completed
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1849,7 +1852,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Failed
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1878,7 +1881,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Initing
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1907,7 +1910,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Killed
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1936,7 +1939,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Launched
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -1965,7 +1968,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Running
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2025,7 +2028,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2054,7 +2057,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2114,7 +2117,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2143,7 +2146,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2486,7 +2489,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2515,7 +2518,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2751,7 +2754,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2780,7 +2783,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2910,7 +2913,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2939,7 +2942,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -2999,7 +3002,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Capacity Bytes
+              Capacity
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -3028,7 +3031,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Non Heap Memory Used Bytes
+              Used
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -3166,7 +3169,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Maps Running
+              Running
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -3226,7 +3229,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              Reduces Running
+              Running
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -3286,7 +3289,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Completed
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -3315,7 +3318,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Failed Ping
             </property>
             <property id="limit" mode="w" type="long">
               -1
@@ -3344,7 +3347,7 @@
               %5.2lf%s
             </property>
             <property id="legend" mode="w" type="string">
-              ${graphPoint/id}
+              Failed Timeout
             </property>
             <property id="limit" mode="w" type="long">
               -1
