@@ -54,6 +54,11 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 id: 'hbase_device',
                 dataIndex: 'hbase_device',
                 header: _t('HBase Device'),
+                renderer: function(v) {
+                    // The value is returned in link format in details, but
+                    // it should be rendered so that html is not escaped.
+                    return v;
+                }
             },{
                 id: 'last_contacted',
                 dataIndex: 'last_contacted',
