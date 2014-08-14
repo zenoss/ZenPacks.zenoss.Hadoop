@@ -11,6 +11,7 @@ import json
 import collections
 from itertools import chain
 import xml.etree.cElementTree as ET
+from OpenSSL.SSL import Error as SSLError
 import zope.component
 
 from Products.ZenUtils.Utils import prepId
@@ -187,12 +188,16 @@ class HadoopServiceNode(PythonPlugin):
             e = failure.value
         except:
             e = failure  # no twisted failure
+        if isinstance(e, SSLError):
+            e = SSLError(
+                'Connection lost for {}. HTTPS was not configured'.format(
+                    device.id
+                ))
         log.error(e)
         self._send_event(str(e).capitalize(), device.id, 5)
         raise e
 
     def on_success(self, log, device):
-        log.info('Successfull modeling')
         self._send_event("Successfull modeling", device.id, 0)
 
     def _send_event(self, reason, id, severity, force=False):

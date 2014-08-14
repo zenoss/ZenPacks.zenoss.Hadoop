@@ -9,6 +9,7 @@
 
 import json
 import logging
+from OpenSSL.SSL import Error as SSLError
 
 from Products.ZenEvents import ZenEventClasses
 from ZenPacks.zenoss.Hadoop import MODULE_NAME
@@ -111,6 +112,10 @@ class HadoopPlugin(PythonDataSourcePlugin):
                 results['maps'].extend(self.add_maps(
                     res, ds, state=NODE_HEALTH_DEAD)
                 )
+                if isinstance(e, SSLError):
+                    summary = 'Connection lost for {}. https was not configured'.format(
+                        ds.device
+                    )
 
             if res.get('jmx'):
                 severity = ZenEventClasses.Clear
