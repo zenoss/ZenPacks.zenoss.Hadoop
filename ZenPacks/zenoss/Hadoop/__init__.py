@@ -15,16 +15,12 @@ log = logging.getLogger('zen.Hadoop')
 
 import Globals
 
-from zope.event import notify
-
 from Products.ZenModel.Device import Device
 from Products.ZenModel.ZenPack import ZenPack as ZenPackBase
 from Products.ZenRelations.RelSchema import ToManyCont, ToOne
 from Products.ZenRelations.zPropertyCategory import setzPropertyCategory
 from Products.ZenUtils.Utils import unused, monkeypatch
-from Products.ZenUtils.IpUtil import getHostByName
 from Products.Zuul.interfaces import ICatalogTool
-from Products.Zuul.catalog.events import IndexingEvent
 
 unused(Globals)
 
@@ -116,90 +112,6 @@ def getErrorNotification(self):
     return
 
 
-def setHBaseAutodiscover(self, node_name):
-    """
-    One of HadoopDataNode can be occupied by HBase.
-    """
-    hbase_device = None
-    old_hbase_device = None
-    dc = self.dmd.getOrganizer(self.zHbaseDeviceClass)
-
-    # a) Check if HBase changed it's node
-    for node in self.hadoop_data_nodes():
-        if node.hbase_device_id == node_name:
-            # Nothing changed
-            return
-
-    # b) Lookup for old HBase node
-    for node in self.hadoop_data_nodes():
-        if node.hbase_device_id:
-            old_hbase_device = self.findDeviceByIdExact(node.hbase_device_id)
-            node.hbase_device_id = None
-            node.index_object()
-            break
-
-    if old_hbase_device:
-        # Changing IP to node_name
-        hbase_device = old_hbase_device
-        hbase_device.setManageIp(node_name)
-
-        hbase_device.index_object()
-        notify(IndexingEvent(hbase_device))
-    else:
-        ip = self._sanitizeIPaddress(node_name)
-        if not ip:
-            ip = getHostByName(node_name)
-
-        if not ip:
-            log.warn("Cann't resolve %s into IP address" % node_name)
-            return
-
-        hbase_device = self.findDevice(ip)
-
-        if hbase_device:
-            log.info("HBase device found in existing devices")
-        else:
-            # Check if HBase ZenPack is installed
-            try:
-                self.zHBasePassword
-            except AttributeError:
-                log.warn("HBase ZenPack is requaried")
-                return
-
-            log.info("HBase device created")
-            hbase_device = dc.createInstance(ip)
-            hbase_device.title = node_name
-            hbase_device.setManageIp(ip)
-            hbase_device.setPerformanceMonitor(self.getPerformanceServer().id)
-            hbase_device.index_object()
-            hbase_device.zCollectorPlugins = list(
-                hbase_device.zCollectorPlugins
-            ).extend(
-                ['HBaseCollector', 'HBaseTableCollector']
-            )
-            hbase_device.zHBasePassword = self.zHBasePassword
-            hbase_device.zHBaseUsername = self.zHBaseUsername
-            hbase_device.zHBasePort = self.zHBasePort
-
-        hbase_device.index_object()
-        notify(IndexingEvent(hbase_device))
-
-        # Schedule a modeling job for the new device.
-        # hbase_device.collectDevice(setlog=False, background=True)
-
-    # Setting HBase device ID as node property for back link from UI
-    for node in self.hadoop_data_nodes():
-        if str(node.title).split(':')[0] == node_name:
-            node.hbase_device_id = hbase_device.id
-            node.index_object()
-
-    return
-
-
-def getHBaseAutodiscover(self):
-    return True
-
-
 @monkeypatch('Products.ZenModel.Device.Device')
 def getRRDTemplates(self):
     """
@@ -222,8 +134,6 @@ def getRRDTemplates(self):
 
 Device.setErrorNotification = setErrorNotification
 Device.getErrorNotification = getErrorNotification
-Device.setHBaseAutodiscover = setHBaseAutodiscover
-Device.getHBaseAutodiscover = getHBaseAutodiscover
 
 
 class ZenPack(ZenPackBase):

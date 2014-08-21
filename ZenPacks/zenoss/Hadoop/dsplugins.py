@@ -295,9 +295,10 @@ class HadoopHBasePlugin(HadoopPlugin):
                 check = yield getPage(url, headers=headers)
             except Exception:
                 continue
-            module = DS_TO_RELATION.get(ds.datasource)
+            module = DS_TO_RELATION.get('DataNodeMonitor')
             if ds.zHbaseAutodiscover and module:
                 results['maps'].append(ObjectMap({
+                    "compname": "{}/{}".format(module[0], ds.component),
                     "modname": module[1],
                     "setHBaseAutodiscover": ip
                 }))
