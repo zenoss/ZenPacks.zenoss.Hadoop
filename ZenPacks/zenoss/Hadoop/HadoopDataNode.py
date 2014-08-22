@@ -110,9 +110,8 @@ class HadoopDataNode(HadoopComponent):
                     self.getPerformanceServer().id
                 )
                 hbase_device.index_object()
-                hbase_device.zCollectorPlugins = list(
-                    hbase_device.zCollectorPlugins
-                ).extend(
+                hbase_device.setZenProperty(
+                    "zCollectorPlugins", list(hbase_device.zCollectorPlugins) +
                     ['HBaseCollector', 'HBaseTableCollector']
                 )
                 hbase_device.zHBasePassword = self.zHBasePassword
