@@ -260,6 +260,9 @@ class HadoopPlugin(PythonDataSourcePlugin):
                             result[point.id] = (
                                 len(json.loads(value[item])), 'N'
                             )
+                        elif value.get("name") == "Hadoop:service=NameNode,name=NameNodeInfo":
+                            if value.get(point.id) is not None:
+                                result[point.id] = (value[point.id], 'N')
                 elif ds.datasource == "DataNodeMonitor":
                     if value.get(point.id) is not None:
                         result[point.id] = (value[point.id], 'N')
