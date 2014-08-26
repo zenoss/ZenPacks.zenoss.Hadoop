@@ -199,8 +199,11 @@ class HadoopPlugin(PythonDataSourcePlugin):
         @return: list of RelationshipMap
         """
         nodes_oms = []
-        values = json.loads(data['jmx'])
-
+        try:
+            values = json.loads(data['jmx'])
+        except Exception:
+            raise HadoopException('Error parsing collected data for {} '
+                                  'monitoring template'.format(device.template))
         for value in values.get('beans'):
             if value.get('name') == 'Hadoop:service=NameNode,name=NameNodeInfo':
                 for key, val in (('LiveNodes', NODE_HEALTH_NORMAL),
@@ -211,10 +214,13 @@ class HadoopPlugin(PythonDataSourcePlugin):
                             log, device, value.get(key), val, data['conf'], True
                         )
                     )
-        return [RelationshipMap(
-                relname='hadoop_data_nodes',
-                modname=MODULE_NAME['HadoopDataNode'],
-                objmaps=nodes_oms)]
+        rm = RelationshipMap(
+            relname='hadoop_data_nodes',
+            modname=MODULE_NAME['HadoopDataNode'],
+            objmaps=nodes_oms)
+        if list(rm):
+            return [rm]
+        return []
 
     def form_values(self, result, ds):
         """
@@ -233,7 +239,8 @@ class HadoopPlugin(PythonDataSourcePlugin):
         try:
             data = json.loads(result)
         except Exception:
-            raise HadoopException('Error parsing collected data.')
+            raise HadoopException('Error parsing collected data for {} '
+                                  'monitoring template'.format(ds.template))
 
         result = {}
         for point in ds.points:

@@ -74,6 +74,8 @@ class HadoopServiceNode(PythonPlugin):
 
         log.info('Collecting Hadoop nodes for device %s' % device.id)
 
+        hadoop_version = None
+
         maps = collections.OrderedDict([
             ('hadoop_job_tracker', []),
             ('hadoop_task_tracker', []),
@@ -141,6 +143,10 @@ class HadoopServiceNode(PythonPlugin):
         for bean in data['beans']:
             if bean['name'] == 'Hadoop:service=NameNode,name=NameNodeInfo':
                 hadoop_version = bean["Version"]
+
+        if hadoop_version is None:
+            log.error('HadoopServiceNode: Error parsing collected data')
+            return
 
         def build_relations(component):
             """
