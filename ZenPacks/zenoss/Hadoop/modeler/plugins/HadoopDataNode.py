@@ -105,11 +105,14 @@ class HadoopDataNode(PythonPlugin):
             modname=MODULE_NAME['HadoopDataNode'],
             objmaps=nodes_oms))
 
+        if not list(list(maps['hadoop_data_nodes'])[0]):
+            log.error('HadoopDataNode: Error parsing collected data')
+            return
+
         log.info(
             'Modeler %s finished processing data for device %s',
             self.name(), device.id
         )
-
         return list(chain.from_iterable(maps.itervalues()))
 
     def on_error(self, log, device, failure):

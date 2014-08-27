@@ -40,6 +40,14 @@
               True
             </property>
           </object>
+          <object class="RRDDataPoint" id="Free" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
           <object class="RRDDataPoint" id="LiveNodes" module="Products.ZenModel.RRDDataPoint">
             <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
               GAUGE
@@ -56,7 +64,23 @@
               True
             </property>
           </object>
+          <object class="RRDDataPoint" id="Total" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
           <object class="RRDDataPoint" id="TotalFiles" module="Products.ZenModel.RRDDataPoint">
+            <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
+              GAUGE
+            </property>
+            <property id="isrow" mode="w" type="boolean">
+              True
+            </property>
+          </object>
+          <object class="RRDDataPoint" id="Used" module="Products.ZenModel.RRDDataPoint">
             <property id="rrdtype" mode="w" select_variable="rrdtypes" type="selection">
               GAUGE
             </property>
@@ -153,6 +177,124 @@
             </property>
             <property id="dpName" mode="w" type="string">
               NameNodeMonitor_TotalFiles
+            </property>
+            <property id="cFunc" mode="w" type="string">
+              AVERAGE
+            </property>
+          </object>
+        </tomanycont>
+      </object>
+      <object class="GraphDefinition" id="HDFS Memory" module="Products.ZenModel.GraphDefinition">
+        <property id="height" mode="w" type="int">
+          100
+        </property>
+        <property id="width" mode="w" type="int">
+          500
+        </property>
+        <property id="units" mode="w" type="string">
+          Bytes
+        </property>
+        <property id="log" mode="w" type="boolean">
+          False
+        </property>
+        <property id="base" mode="w" type="boolean">
+          False
+        </property>
+        <property id="miny" mode="w" type="int">
+          -1
+        </property>
+        <property id="maxy" mode="w" type="int">
+          -1
+        </property>
+        <property id="hasSummary" mode="w" type="boolean">
+          True
+        </property>
+        <property id="sequence" mode="w" type="long">
+          5
+        </property>
+        <tomanycont id="graphPoints">
+          <object class="DataPointGraphPoint" id="Free" module="Products.ZenModel.DataPointGraphPoint">
+            <property id="sequence" mode="w" type="long">
+              1
+            </property>
+            <property id="lineType" mode="w" select_variable="lineTypes" type="selection">
+              LINE
+            </property>
+            <property id="lineWidth" mode="w" type="long">
+              1
+            </property>
+            <property id="stacked" mode="w" type="boolean">
+              False
+            </property>
+            <property id="format" mode="w" type="string">
+              %5.2lf%s
+            </property>
+            <property id="legend" mode="w" type="string">
+              DFS Remaining
+            </property>
+            <property id="limit" mode="w" type="long">
+              -1
+            </property>
+            <property id="dpName" mode="w" type="string">
+              NameNodeMonitor_Free
+            </property>
+            <property id="cFunc" mode="w" type="string">
+              AVERAGE
+            </property>
+          </object>
+          <object class="DataPointGraphPoint" id="Total" module="Products.ZenModel.DataPointGraphPoint">
+            <property id="sequence" mode="w" type="long">
+              0
+            </property>
+            <property id="lineType" mode="w" select_variable="lineTypes" type="selection">
+              LINE
+            </property>
+            <property id="lineWidth" mode="w" type="long">
+              1
+            </property>
+            <property id="stacked" mode="w" type="boolean">
+              False
+            </property>
+            <property id="format" mode="w" type="string">
+              %5.2lf%s
+            </property>
+            <property id="legend" mode="w" type="string">
+              Configured Capacity
+            </property>
+            <property id="limit" mode="w" type="long">
+              -1
+            </property>
+            <property id="dpName" mode="w" type="string">
+              NameNodeMonitor_Total
+            </property>
+            <property id="cFunc" mode="w" type="string">
+              AVERAGE
+            </property>
+          </object>
+          <object class="DataPointGraphPoint" id="Used" module="Products.ZenModel.DataPointGraphPoint">
+            <property id="sequence" mode="w" type="long">
+              2
+            </property>
+            <property id="lineType" mode="w" select_variable="lineTypes" type="selection">
+              LINE
+            </property>
+            <property id="lineWidth" mode="w" type="long">
+              1
+            </property>
+            <property id="stacked" mode="w" type="boolean">
+              False
+            </property>
+            <property id="format" mode="w" type="string">
+              %5.2lf%s
+            </property>
+            <property id="legend" mode="w" type="string">
+              DFS Used
+            </property>
+            <property id="limit" mode="w" type="long">
+              -1
+            </property>
+            <property id="dpName" mode="w" type="string">
+              NameNodeMonitor_Used
             </property>
             <property id="cFunc" mode="w" type="string">
               AVERAGE
