@@ -56,6 +56,7 @@ class HadoopPlugin(PythonDataSourcePlugin):
         'zHadoopPassword',
         'zHadoopNameNodePort',
         'zHbaseAutodiscover',
+        'zHBaseMasterPort',
         'title',
     )
 
@@ -291,7 +292,7 @@ class HadoopHBasePlugin(HadoopPlugin):
             ip = ds.title.split(':')[0]
             url = hadoop_url(
                 scheme=ds.zHadoopScheme,
-                port='60010',
+                port=ds.zHBaseMasterPort,
                 host=ip,
                 endpoint='/master-status'
             )
