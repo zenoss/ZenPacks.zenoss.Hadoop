@@ -17,7 +17,7 @@ ZC.registerName('HadoopTaskTracker', _t('Hadoop Task Tracker'), _t('Hadoop Task 
 ZC.registerName('HadoopSecondaryNameNode', _t('Hadoop Secondary Name Node'), _t('Hadoop Secondary Name Nodes'));
 ZC.registerName('HadoopResourceManager', _t('Hadoop Resource Manager'), _t('Hadoop Resource Managers'));
 ZC.registerName('HadoopNodeManager', _t('Hadoop Node Manager'), _t('Hadoop Node Managers'));
-ZC.registerName('HadoopJobHistory', _t('Hadoop Job History'), _t('Hadoop Job Historys'));
+ZC.registerName('HadoopJobHistory', _t('Hadoop Job History'), _t('Hadoop Job History'));
 
 /* HadoopDataNode */
 ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
