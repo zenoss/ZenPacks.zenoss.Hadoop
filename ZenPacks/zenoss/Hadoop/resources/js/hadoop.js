@@ -182,6 +182,7 @@ for (i in list_components){
 Zenoss.form.SelectScheme = Ext.extend(Ext.form.ComboBox, {
     constructor: function(config){
         Ext.applyIf(config, {
+            editable: false,
             allowBlank: false,
             triggerAction: 'all',
             typeAhead: false,
@@ -192,8 +193,8 @@ Zenoss.form.SelectScheme = Ext.extend(Ext.form.ComboBox, {
     }
 });
 /* Ext.version will be defined in ExtJS3 and undefined in ExtJS4. */
+Zenoss.zproperties.registerZPropertyType('scheme', {xtype: 'scheme'});
 if (Ext.version === undefined) {
-    Zenoss.zproperties.registerZPropertyType('scheme', {xtype: 'scheme'});
     Ext.reg('scheme', 'Zenoss.form.SelectScheme');
 } else {
     Ext.reg('scheme', Zenoss.form.SelectScheme);
