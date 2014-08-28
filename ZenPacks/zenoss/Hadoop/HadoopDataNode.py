@@ -116,7 +116,10 @@ class HadoopDataNode(HadoopComponent):
                 )
                 hbase_device.zHBasePassword = self.zHBasePassword
                 hbase_device.zHBaseUsername = self.zHBaseUsername
-                hbase_device.zHBasePort = self.zHBasePort
+                hbase_device.zHBaseRestPort = self.zHBaseRestPort
+                hbase_device.zHBaseMasterPort = self.zHBaseMasterPort
+                hbase_device.zHBaseRegionServerPort = self.zHBaseRegionServerPort
+                hbase_device.zHBaseScheme = self.zHBaseScheme
 
                 log.info("HBase device created")
                 hbase_device.index_object()
