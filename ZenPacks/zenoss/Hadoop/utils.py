@@ -10,6 +10,8 @@
 import json
 import re
 from base64 import encodestring
+from OpenSSL.SSL import Error as SSLError
+from twisted.internet.error import ConnectionRefusedError
 
 from Products.DataCollector.plugins.DataMaps import ObjectMap
 from Products.ZenUtils.Utils import prepId
@@ -22,6 +24,12 @@ NAME_SPLITTER = '(.)'
 NODE_HEALTH_NORMAL = 'Normal'
 NODE_HEALTH_DEAD = 'Dead'
 NODE_HEALTH_DECOM = 'Decommissioned'
+
+
+class HadoopException(Exception):
+    """
+    Exception class to catch known exceptions.
+    """
 
 
 def node_oms(log, device, data, state, result, remodel=False):
@@ -121,3 +129,20 @@ def hadoop_headers(accept, username, passwd):
         "Authorization": authHeader,
         'Proxy-Authenticate': authHeader
     }
+
+
+def check_error(error, device_id):
+    '''
+    Check if error is instance of OpenSSL.SSL or Connection Error
+    and return instance of error with correct message
+    '''
+    if isinstance(error, SSLError):
+        return SSLError(
+            'Connection lost for {}. HTTPS was not configured'.format(
+                device_id
+            ))
+    elif str(error).startswith('404') or str(error).startswith('405') \
+            or isinstance(error, ConnectionRefusedError):
+        return HadoopException(
+            'The modeling failed due to connection issue. Verify the values of'
+            ' zHadoopNameNodePort and re-try')

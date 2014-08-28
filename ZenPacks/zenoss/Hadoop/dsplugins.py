@@ -9,13 +9,12 @@
 
 import json
 import logging
-from OpenSSL.SSL import Error as SSLError
 
 from Products.ZenEvents import ZenEventClasses
 from ZenPacks.zenoss.Hadoop import MODULE_NAME
 from ZenPacks.zenoss.Hadoop.utils import (
     NODE_HEALTH_NORMAL, NODE_HEALTH_DEAD, NODE_HEALTH_DECOM, node_oms,
-    hadoop_url, hadoop_headers)
+    hadoop_url, hadoop_headers, HadoopException, check_error)
 
 
 from twisted.web.client import getPage
@@ -40,12 +39,6 @@ DS_TO_RELATION = {
                                'HadoopResourceManager'),
     'JobHistoryMonitor': ('hadoop_job_history', 'HadoopJobHistory'),
 }
-
-
-class HadoopException(Exception):
-    """
-    Exception class to catch known exceptions.
-    """
 
 
 class HadoopPlugin(PythonDataSourcePlugin):
@@ -108,15 +101,17 @@ class HadoopPlugin(PythonDataSourcePlugin):
                 res['jmx'] = yield getPage(jmx_url, headers=headers)
             except Exception as e:
                 # Add event if can't connect to some node
+                e = check_error(e, ds.device) or e
                 severity = ZenEventClasses.Error
                 summary = str(e)
                 results['maps'].extend(self.add_maps(
                     res, ds, state=NODE_HEALTH_DEAD)
                 )
-                if isinstance(e, SSLError):
-                    summary = 'Connection lost for {}. https was not configured'.format(
-                        ds.device
-                    )
+
+                # if isinstance(e, SSLError):
+                #     summary = 'Connection lost for {}. HTTPS was not configured'.format(
+                #         ds.device
+                #     )
 
             if res.get('jmx'):
                 severity = ZenEventClasses.Clear

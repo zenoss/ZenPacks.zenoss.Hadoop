@@ -11,7 +11,6 @@ import json
 import collections
 from itertools import chain
 import xml.etree.cElementTree as ET
-from OpenSSL.SSL import Error as SSLError
 import zope.component
 
 from Products.ZenUtils.Utils import prepId
@@ -22,7 +21,7 @@ from twisted.web.client import getPage
 from twisted.internet import defer
 from ZenPacks.zenoss.Hadoop import MODULE_NAME
 from ZenPacks.zenoss.Hadoop.utils import \
-    NAME_SPLITTER, hadoop_url, hadoop_headers, get_attr, prep_ip
+    NAME_SPLITTER, hadoop_url, hadoop_headers, get_attr, prep_ip, check_error
 
 
 class HadoopServiceNode(PythonPlugin):
@@ -194,13 +193,9 @@ class HadoopServiceNode(PythonPlugin):
             e = failure.value
         except:
             e = failure  # no twisted failure
-        if isinstance(e, SSLError):
-            e = SSLError(
-                'Connection lost for {}. HTTPS was not configured'.format(
-                    device.id
-                ))
+        e = check_error(e, device.id) or e
         log.error(e)
-        self._send_event(str(e).capitalize(), device.id, 5)
+        self._send_event(str(e), device.id, 5)
         raise e
 
     def on_success(self, log, device):
@@ -219,7 +214,7 @@ class HadoopServiceNode(PythonPlugin):
                 summary=reason,
                 eventClass='/Status',
                 device=id,
-                eventKey='ConnectionError',
+                eventKey='HadoopServiceNode_ConnectionError',
                 severity=severity,
             ))
             return True
