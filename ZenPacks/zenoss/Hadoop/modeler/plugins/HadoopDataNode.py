@@ -10,7 +10,6 @@
 import json
 import collections
 from itertools import chain
-from OpenSSL.SSL import Error as SSLError
 import zope.component
 
 from Products.DataCollector.plugins.DataMaps import ObjectMap, RelationshipMap
@@ -19,7 +18,7 @@ from Products.DataCollector.plugins.CollectorPlugin import PythonPlugin
 from twisted.web.client import getPage
 from twisted.internet import defer
 from ZenPacks.zenoss.Hadoop import MODULE_NAME
-from ZenPacks.zenoss.Hadoop.utils import NODE_HEALTH_NORMAL, \
+from ZenPacks.zenoss.Hadoop.utils import NODE_HEALTH_NORMAL, check_error,\
     NODE_HEALTH_DEAD, NODE_HEALTH_DECOM, node_oms, hadoop_url, hadoop_headers
 
 
@@ -121,13 +120,9 @@ class HadoopDataNode(PythonPlugin):
             e = failure.value
         except:
             e = failure  # no twisted failure
-        if isinstance(e, SSLError):
-            e = SSLError(
-                'Connection lost for {}. HTTPS was not configured'.format(
-                    device.id
-                ))
+        e = check_error(e, device.id) or e
         log.error(e)
-        self._send_event(str(e).capitalize(), device.id, 5)
+        self._send_event(str(e), device.id, 5)
         raise e
 
     def on_success(self, log, device):
@@ -146,7 +141,7 @@ class HadoopDataNode(PythonPlugin):
                 summary=reason,
                 eventClass='/Status',
                 device=id,
-                eventKey='ConnectionError',
+                eventKey='HadoopDataNode_ConnectionError',
                 severity=severity,
             ))
 
