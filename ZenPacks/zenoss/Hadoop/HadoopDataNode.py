@@ -114,12 +114,22 @@ class HadoopDataNode(HadoopComponent):
                     "zCollectorPlugins", list(hbase_device.zCollectorPlugins) +
                     ['HBaseCollector', 'HBaseTableCollector']
                 )
-                hbase_device.zHBasePassword = self.zHBasePassword
-                hbase_device.zHBaseUsername = self.zHBaseUsername
-                hbase_device.zHBaseRestPort = self.zHBaseRestPort
-                hbase_device.zHBaseMasterPort = self.zHBaseMasterPort
-                hbase_device.zHBaseRegionServerPort = self.zHBaseRegionServerPort
-                hbase_device.zHBaseScheme = self.zHBaseScheme
+                hbase_device.setZenProperty(
+                    'zHBasePassword', self.zHBasePassword
+                )
+                hbase_device.setZenProperty(
+                    'zHBaseUsername', self.zHBaseUsername
+                )
+                hbase_device.setZenProperty(
+                    'zHBaseRestPort', self.zHBaseRestPort
+                )
+                hbase_device.setZenProperty(
+                    'zHBaseMasterPort', self.zHBaseMasterPort
+                )
+                hbase_device.setZenProperty(
+                    'zHBaseRegionServerPort', self.zHBaseRegionServerPort
+                )
+                hbase_device.setZenProperty('zHBaseScheme', self.zHBaseScheme)
 
                 log.info("HBase device created")
                 hbase_device.index_object()
