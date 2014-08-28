@@ -19,6 +19,7 @@ ZC.registerName('HadoopResourceManager', _t('Hadoop Resource Manager'), _t('Hado
 ZC.registerName('HadoopNodeManager', _t('Hadoop Node Manager'), _t('Hadoop Node Managers'));
 ZC.registerName('HadoopJobHistory', _t('Hadoop Job History'), _t('Hadoop Job History'));
 
+
 /* HadoopDataNode */
 ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
     subComponentGridPanel: false,
@@ -38,7 +39,7 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
                 {name: 'monitored'},
                 {name: 'locking'},
                 {name: 'last_contacted'},
-                {name: 'health_state'},
+                {name: 'health_state'}
             ],
             columns: [{
                 id: 'severity',
@@ -49,7 +50,7 @@ ZC.HadoopDataNodePanel = Ext.extend(ZC.ComponentGridPanel, {
             },{
                 id: 'name',
                 dataIndex: 'name',
-                header: _t('Name'),
+                header: _t('Name')
             },{
                 id: 'hbase_device',
                 dataIndex: 'hbase_device',
@@ -112,7 +113,7 @@ fields = [
                 {name: 'monitor'},
                 {name: 'monitored'},
                 {name: 'locking'},
-                {name: 'health_state'},
+                {name: 'health_state'}
 ];
 
 columns =[{
@@ -124,7 +125,7 @@ columns =[{
             },{
                 id: 'name',
                 dataIndex: 'name',
-                header: _t('Name'),
+                header: _t('Name')
             },{
                 id: 'health_state',
                 dataIndex: 'health_state',
@@ -151,7 +152,7 @@ columns =[{
 }];    
 
 function Create_component(component){
-    var componentpanel= component +'Panel'
+    var componentpanel = component +'Panel';
     
     ZC[componentpanel] = Ext.extend(ZC.ComponentGridPanel, {
         subComponentGridPanel: false,
@@ -174,6 +175,28 @@ function Create_component(component){
 
 for (i in list_components){
     Create_component(list_components[i]);
+}
+
+
+/* Select Field for zHadoopScheme */
+Zenoss.form.SelectScheme = Ext.extend(Ext.form.ComboBox, {
+    constructor: function(config){
+        Ext.applyIf(config, {
+            allowBlank: false,
+            triggerAction: 'all',
+            typeAhead: false,
+            forceSelection: true,
+            store: ['http', 'https']
+        });
+        Zenoss.form.Select.superclass.constructor.call(this, config);
+    }
+});
+/* Ext.version will be defined in ExtJS3 and undefined in ExtJS4. */
+if (Ext.version === undefined) {
+    Zenoss.zproperties.registerZPropertyType('scheme', {xtype: 'scheme'});
+    Ext.reg('scheme', 'Zenoss.form.SelectScheme');
+} else {
+    Ext.reg('scheme', Zenoss.form.SelectScheme);
 }
 
 })();

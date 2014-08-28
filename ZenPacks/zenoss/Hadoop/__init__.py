@@ -144,7 +144,7 @@ class ZenPack(ZenPackBase):
     packZProperties = [
         ('zHbaseAutodiscover', False, 'boolean'),
         ('zHbaseDeviceClass', '/Server/Linux', 'string'),
-        ('zHadoopScheme', 'http', 'string'),
+        ('zHadoopScheme', 'http', 'scheme'),
         ('zHadoopUsername', '', 'string'),
         ('zHadoopPassword', '', 'string'),
         ('zHadoopNameNodePort', '50070', 'string'),
