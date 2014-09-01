@@ -34,7 +34,7 @@ DS_TO_RELATION = {
                                  'HadoopSecondaryNameNode'),
     'JobTrackerMonitor': ('hadoop_job_tracker', 'HadoopJobTracker'),
     'TaskTrackerMonitor': ('hadoop_task_tracker', 'HadoopTaskTracker'),
-    'NodeManagerMonitor': ('hadoop_node_manager', 'HadoopNodeManager'),
+    'NodeManagerMonitor': ('hadoop_node_managers', 'HadoopNodeManager'),
     'ResourceManagerMonitor': ('hadoop_resource_manager',
                                'HadoopResourceManager'),
     'JobHistoryMonitor': ('hadoop_job_history', 'HadoopJobHistory'),

@@ -62,7 +62,7 @@ NEW_DEVICE_RELATIONS = (
     ('hadoop_task_tracker', 'HadoopTaskTracker'),
     ('hadoop_secondary_name_node', 'HadoopSecondaryNameNode'),
     ('hadoop_resource_manager', 'HadoopResourceManager'),
-    ('hadoop_node_manager', 'HadoopNodeManager'),
+    ('hadoop_node_managers', 'HadoopNodeManager'),
     ('hadoop_job_history', 'HadoopJobHistory'),
     ('hadoop_data_nodes', 'HadoopDataNode'),
 )
