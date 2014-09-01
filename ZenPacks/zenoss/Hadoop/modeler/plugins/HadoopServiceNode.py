@@ -199,7 +199,7 @@ class HadoopServiceNode(PythonPlugin):
         try:
             conf = ET.fromstring(conf)
         except ET.ParseError:
-            pass
+            return
 
         comp = self._dict_components['HadoopResourceManager']
         res_mgr_address = get_attr(comp[2], conf)
