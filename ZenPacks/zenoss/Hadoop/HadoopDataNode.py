@@ -80,7 +80,7 @@ class HadoopDataNode(HadoopComponent):
         # b) Lookup for old HBase node
         for node in self.hadoop_data_nodes():
             if node.hbase_device_id:
-                old_hbase_device = self.findDevice(
+                old_hbase_device = self.findDeviceByIdOrIp(
                     node.hbase_device_id
                 )
                 node.hbase_device_id = None
