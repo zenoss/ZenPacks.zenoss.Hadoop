@@ -153,6 +153,11 @@ class ZenPack(ZenPackBase):
     def install(self, app):
         super(ZenPack, self).install(app)
 
+        # Add zHBaseMasterPort if HBase ZenPack is not installed
+        if not self.dmd.Devices.hasProperty('zHBaseMasterPort'):
+            self.dmd.Devices._setProperty('zHBaseMasterPort', '60010')
+            log.debug('Adding zHBaseMasterPort property')
+
         log.info('Adding Hadoop relationships to existing devices')
         self._buildDeviceRelations()
 
@@ -168,6 +173,15 @@ class ZenPack(ZenPackBase):
             Device._relations = tuple(
                 [x for x in Device._relations
                     if x[0] not in NEW_DEVICE_RELATIONS])
+            # Remove zHBaseMasterPort if HBase ZenPack is not installed
+            try:
+                self.dmd.ZenPackManager.packs._getOb(
+                    'ZenPacks.zenoss.HBase'
+                )
+            except AttributeError:
+                if self.dmd.Devices.hasProperty('zHBaseMasterPort'):
+                    self.dmd.Devices.deleteZenProperty('zHBaseMasterPort')
+                    log.debug('Removing zHBaseMasterPort property')
 
             log.info('Removing Hadoop device relationships')
             self._buildDeviceRelations()
