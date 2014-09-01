@@ -23,7 +23,7 @@ class HadoopNodeManager(HadoopServiceNode):
     _relations = HadoopServiceNode._relations + (
         ('hadoop_host', ToOne(
             ToManyCont,
-            'Products.ZenModel.Device.Device', 'hadoop_node_manager')),
+            'Products.ZenModel.Device.Device', 'hadoop_node_managers')),
     )
 
 

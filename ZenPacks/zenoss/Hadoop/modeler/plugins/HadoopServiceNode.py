@@ -39,6 +39,42 @@ class HadoopServiceNode(PythonPlugin):
     )
     _eventService = zope.component.queryUtility(IEventService)
 
+    _dict_components = {
+        'HadoopJobTracker': (
+            'Job Tracker',
+            'hadoop_job_tracker',
+            ('mapred.job.tracker.http.address',  # Deprecated
+             'mapreduce.jobtracker.http.address')  # New
+        ),
+        'HadoopTaskTracker': (
+            'Task Tracker',
+            'hadoop_task_tracker',
+            ('mapred.task.tracker.http.address',  # Deprecated
+             'mapreduce.tasktracker.http.address')  # New
+        ),
+        'HadoopSecondaryNameNode': (
+            'Secondary Name Node',
+            'hadoop_secondary_name_node',
+            ('dfs.secondary.http.address',  # Deprecated
+             'dfs.namenode.secondary.http-address')  # New
+        ),
+        'HadoopResourceManager': (
+            'Resource Manager',
+            'hadoop_resource_manager',
+            ('yarn.resourcemanager.webapp.address')
+        ),
+        'HadoopNodeManager': (
+            'Node Manager',
+            'hadoop_node_managers',
+            ('yarn.nodemanager.webapp.address')
+        ),
+        'HadoopJobHistory': (
+            'Job History',
+            'hadoop_job_history',
+            ('mapreduce.jobhistory.webapp.address')
+        )
+    }
+
     @defer.inlineCallbacks
     def collect(self, device, log):
 
@@ -65,8 +101,16 @@ class HadoopServiceNode(PythonPlugin):
         try:
             result['jmx'] = yield getPage(jmx_url, headers=headers)
             result['conf'] = yield getPage(conf_url, headers=headers)
-        except Exception, e:
+        except Exception as e:
             self.on_error(log, device, e)
+
+        try:
+            rm_url = self._res_mgr_url(device, result['conf'])
+            if rm_url:
+                result['rm_jmx'] = yield getPage(rm_url, headers=headers)
+        except Exception as e:
+            log.debug('Unable to collect node managers. Error: {}'.format(e))
+
         self.on_success(log, device)
         defer.returnValue(result)
 
@@ -81,61 +125,16 @@ class HadoopServiceNode(PythonPlugin):
             ('hadoop_task_tracker', []),
             ('hadoop_secondary_name_node', []),
             ('hadoop_resource_manager', []),
-            ('hadoop_node_manager', []),
+            ('hadoop_node_managers', []),
             ('hadoop_job_history', []),
         ])
-
-        dict_components = {
-            'HadoopJobTracker': (
-                'Job Tracker',
-                'hadoop_job_tracker',
-                (
-                    'mapred.job.tracker.http.address',  # Deprecated
-                    'mapreduce.jobtracker.http.address'  # New
-                )
-            ),
-            'HadoopTaskTracker': (
-                'Task Tracker',
-                'hadoop_task_tracker',
-                (
-                    'mapred.task.tracker.http.address',  # Deprecated
-                    'mapreduce.tasktracker.http.address'  # New
-                )
-            ),
-            'HadoopSecondaryNameNode': (
-                'Secondary Name Node',
-                'hadoop_secondary_name_node',
-                (
-                    'dfs.secondary.http.address',  # Deprecated
-                    'dfs.namenode.secondary.http-address'  # New
-                )
-            ),
-            'HadoopResourceManager': (
-                'Resource Manager',
-                'hadoop_resource_manager',
-                (
-                    'yarn.resourcemanager.webapp.address'
-                )
-            ),
-            'HadoopNodeManager': (
-                'Node Manager',
-                'hadoop_node_manager',
-                (
-                    'yarn.nodemanager.webapp.address'
-                )
-            ),
-            'HadoopJobHistory': (
-                'Job History',
-                'hadoop_job_history',
-                (
-                    'mapreduce.jobhistory.webapp.address'
-                )
-            )
-        }
 
         try:
             results = ET.fromstring(result['conf'])
             data = json.loads(result['jmx'])
+            res_mgr_data = []
+            if result.get('rm_jmx'):
+                res_mgr_data = json.loads(result['rm_jmx'])
         except (TypeError, KeyError, ValueError, ET.ParseError):
             log.error('Modeler %s failed to parse the result.' % self.name())
             return
@@ -152,7 +151,7 @@ class HadoopServiceNode(PythonPlugin):
             """
             Receive component's name and build relationships to device
             """
-            data = dict_components[component]
+            data = self._dict_components[component]
             component_name = prep_ip(
                 device, get_attr(data[2], results), results
             )
@@ -179,14 +178,67 @@ class HadoopServiceNode(PythonPlugin):
             build_relations('HadoopTaskTracker')
         else:
             build_relations('HadoopResourceManager')
-            build_relations('HadoopNodeManager')
             build_relations('HadoopJobHistory')
+            # Build maps for node managers.
+            if res_mgr_data:
+                maps['hadoop_node_managers'].append(
+                    self._node_manager_oms(res_mgr_data, device))
 
         log.info(
             'Modeler %s finished processing data for device %s',
             self.name(), device.id
         )
+
         return list(chain.from_iterable(maps.itervalues()))
+
+    def _res_mgr_url(self, device, conf):
+        """
+        Retreive the port of the Hadoop Resource Manager given
+        the configuration data, and construct a url to collect
+        node manager components.
+        """
+        try:
+            conf = ET.fromstring(conf)
+        except ET.ParseError:
+            pass
+
+        comp = self._dict_components['HadoopResourceManager']
+        res_mgr_address = get_attr(comp[2], conf)
+        if res_mgr_address and (':' in res_mgr_address):
+            return hadoop_url(
+                scheme=device.zHadoopScheme,
+                port=res_mgr_address.split(':')[1],
+                host=device.manageIp,
+                endpoint='/jmx')
+
+    def _node_manager_oms(self, data, device):
+        """
+        Build Node Manager object maps.
+        """
+        node_mgr_oms = []
+
+        # Find live node managers names in the jmx output.
+        live_node_mgrs = []
+        for bean in data['beans']:
+            if bean['name'] == 'Hadoop:service=ResourceManager,name=RMNMInfo':
+                live_node_mgrs = bean.setdefault('LiveNodeManagers', [])
+                break
+        if live_node_mgrs:
+            live_node_mgrs = json.loads(live_node_mgrs)
+
+        # Build Node Manager oms given the data found in jmx.
+        comp = self._dict_components['HadoopNodeManager']
+        for node_mgr in live_node_mgrs:
+            node_mgr_address = prep_ip(device, node_mgr['NodeHTTPAddress'])
+            node_mgr_oms.append(ObjectMap({
+                'id': prepId(device.id + NAME_SPLITTER + node_mgr_address),
+                'title': node_mgr_address,
+                'node_type': comp[0]
+            }))
+        return RelationshipMap(
+            relname=comp[1],
+            modname=MODULE_NAME['HadoopNodeManager'],
+            objmaps=node_mgr_oms)
 
     def on_error(self, log, device, failure):
 
@@ -207,14 +259,12 @@ class HadoopServiceNode(PythonPlugin):
         self._send_event("Successfull modeling", device.id, 0)
 
     def _send_event(self, reason, id, severity, force=False):
-
         """
         Send event for device with specified id, severity and
         error message.
         """
 
         if self._eventService:
-
             self._eventService.sendEvent(dict(
                 summary=reason,
                 eventClass='/Status',
