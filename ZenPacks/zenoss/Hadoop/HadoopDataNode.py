@@ -23,11 +23,13 @@ from Products.Zuul.form import schema
 from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.catalog.events import IndexingEvent
 from Products.Zuul.infos.component import ComponentInfo
+from Products.Zuul.interfaces import ICatalogTool
 from Products.Zuul.interfaces.component import IComponentInfo
 from Products.Zuul.utils import ZuulMessageFactory as _t
 
 from Products.ZenUtils.IpUtil import getHostByName
 
+from . import CLASS_NAME
 from .HadoopComponent import HadoopComponent
 
 
@@ -58,7 +60,7 @@ class HadoopDataNode(HadoopComponent):
         """
         hbase_device = None
         old_hbase_device = None
-        dc = self.dmd.getOrganizer(self.zHbaseDeviceClass)
+        dc = self.dmd.getOrganizer(self.zHBaseDeviceClass)
 
         # Check for IP
         ip = self.device()._sanitizeIPaddress(node_name)
@@ -194,3 +196,42 @@ class HadoopDataNodeInfo(ComponentInfo):
                             obj.titleOrId()
                         )
         return ''
+
+
+# Creating a link from the HBase device overview page.
+def hadoop_node_for_device(device):
+    '''
+    Return Hadoop Data Node for HBase device or None.
+    '''
+    # Hadoop can be on either Windows on Linux device.
+    hadoop_deviceclass = device.getDmdRoot('Devices')
+
+    # Look for HadoopDataNode components within all devices.
+    results = ICatalogTool(hadoop_deviceclass).search(
+        types=(CLASS_NAME['HadoopDataNode'],))
+
+    for brain in results:
+        node = brain.getObject()
+        if node.hbase_device_id == device.id:
+            return node
+
+
+class DeviceLinkProvider(object):
+    '''
+    Provides a link on the device overview page to the
+    Hadoop Data Node the HBase is running within.
+    '''
+    def __init__(self, device):
+        self._device = device
+
+    def getExpandedLinks(self):
+        node = hadoop_node_for_device(self._device)
+        if node:
+            return ['HBase on Hadoop Data Node: <a href="{}">{}</a> '
+                    'in Host: <a href="{}">{}</a>'.format(
+                        node.getPrimaryUrlPath(),
+                        node.titleOrId(),
+                        node.device().getPrimaryUrlPath(),
+                        node.device().titleOrId()
+                    )]
+        return []

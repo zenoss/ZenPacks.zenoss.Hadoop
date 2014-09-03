@@ -246,7 +246,6 @@ class HadoopServiceNode(PythonPlugin):
         except:
             e = failure  # no twisted failure
         e = check_error(e, device.id) or e
-        log.error(e)
         self._send_event(str(e), device.id, 5)
         raise e
 
