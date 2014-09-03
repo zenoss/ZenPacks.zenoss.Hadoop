@@ -11,6 +11,7 @@ import json
 import logging
 
 from Products.ZenEvents import ZenEventClasses
+from Products.ZenUtils.IpUtil import getHostByName
 from ZenPacks.zenoss.Hadoop import MODULE_NAME
 from ZenPacks.zenoss.Hadoop.utils import (
     NODE_HEALTH_NORMAL, NODE_HEALTH_DEAD, NODE_HEALTH_DECOM, node_oms,
@@ -107,11 +108,6 @@ class HadoopPlugin(PythonDataSourcePlugin):
                 results['maps'].extend(self.add_maps(
                     res, ds, state=NODE_HEALTH_DEAD)
                 )
-
-                # if isinstance(e, SSLError):
-                #     summary = 'Connection lost for {}. HTTPS was not configured'.format(
-                #         ds.device
-                #     )
 
             if res.get('jmx'):
                 severity = ZenEventClasses.Clear
@@ -283,18 +279,21 @@ class HadoopHBasePlugin(HadoopPlugin):
         """
 
         results = self.new_data()
-        for ds in config.datasources:
-            ip = ds.title.split(':')[0]
+        ds0 = config.datasources[0]
+        ip_ds = self.check_data_nodes(config)
+        # List of IP addresses and data sources if Data Node
+        # and IP address and None if the Device
+        for ip in ip_ds:
             url = hadoop_url(
-                scheme=ds.zHadoopScheme,
-                port=ds.zHBaseMasterPort,
+                scheme=ds0.zHadoopScheme,
+                port=ds0.zHBaseMasterPort,
                 host=ip,
                 endpoint='/master-status'
             )
             headers = hadoop_headers(
                 accept='application/json',
-                username=ds.zHadoopUsername,
-                passwd=ds.zHadoopPassword
+                username=ds0.zHadoopUsername,
+                passwd=ds0.zHadoopPassword
             )
             try:
                 # Check if HBase into Hadoop Data Node
@@ -302,17 +301,44 @@ class HadoopHBasePlugin(HadoopPlugin):
             except Exception:
                 continue
             module = DS_TO_RELATION.get('DataNodeMonitor')
-            if ds.zHbaseAutodiscover and module:
-                results['maps'].append(ObjectMap({
-                    "compname": "{}/{}".format(module[0], ds.component),
-                    "modname": module[1],
-                    "setHBaseAutodiscover": ip
-                }))
+            if ds0.zHbaseAutodiscover and module:
+                if ip_ds[ip]:
+                    summary = 'HBase was discovered on {} data node'.format(
+                        ip_ds[ip].title
+                    )
+                    component = ip_ds[ip].component
+                    # Execute setHBaseAutodiscover method if
+                    # HBase on Hadoop Data Node
+                    results['maps'].append(ObjectMap({
+                        "compname": "{}/{}".format(module[0], ds0.component),
+                        "modname": module[1],
+                        "setHBaseAutodiscover": ip
+                    }))
+                else:
+                    summary = 'HBase was discovered on {} device'.format(ip)
+                    component = None
                 results['events'].append({
-                    'component': ds.component,
-                    'summary': 'HBase was discovered on %s data node' % ds.title,
-                    'eventKey': ds.datasource,
+                    'component': component,
+                    'summary': summary,
+                    'eventKey': 'HadoopHbaseAutodiscover',
                     'eventClass': '/Status',
                     'severity': ZenEventClasses.Info,
                 })
         defer.returnValue(results)
+
+    def check_data_nodes(self, config):
+        """
+        Check if device IP in Data Nodes IP(s), an if not add it
+        """
+        ip_addresses = {}
+        datanodes_ip = []
+        for ds in config.datasources:
+            try:
+                ip = getHostByName(ds.title.split(':')[0])
+            except Exception:
+                continue
+            datanodes_ip.append(ip)
+            ip_addresses.update({ds.title.split(':')[0]: ds})
+        if ds.manageIp not in datanodes_ip:
+            ip_addresses.update({ds.manageIp: None})
+        return ip_addresses

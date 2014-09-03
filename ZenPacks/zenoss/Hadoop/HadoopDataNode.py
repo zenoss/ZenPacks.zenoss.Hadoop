@@ -59,28 +59,33 @@ class HadoopDataNode(HadoopComponent):
         hbase_device = None
         old_hbase_device = None
         dc = self.dmd.getOrganizer(self.zHbaseDeviceClass)
+
+        # Check for IP
+        ip = self.device()._sanitizeIPaddress(node_name)
+        if not ip:
+            try:
+                ip = getHostByName(node_name)
+            except Exception:
+                pass
+        if not ip:
+            log.warn("Cann't resolve %s into IP address" % node_name)
+            return
+
         # a) Check if HBase changed it's node
         for node in self.hadoop_data_nodes():
-            if node.hbase_device_id == node_name:
+            if node.hbase_device_id == ip:
                 # Nothing changed
                 return
 
         # b) Lookup for old HBase node
         for node in self.hadoop_data_nodes():
             if node.hbase_device_id:
-                old_hbase_device = self.findDeviceByIdExact(
+                old_hbase_device = self.findDeviceByIdOrIp(
                     node.hbase_device_id
                 )
                 node.hbase_device_id = None
                 node.index_object()
                 break
-        # Check for IP
-        ip = self.device()._sanitizeIPaddress(node_name)
-        if not ip:
-            ip = getHostByName(node_name)
-        if not ip:
-            log.warn("Cann't resolve %s into IP address" % node_name)
-            return
 
         if old_hbase_device:
             # Changing IP to node_name
@@ -141,7 +146,7 @@ class HadoopDataNode(HadoopComponent):
         # Setting HBase device ID as node property for back link from UI
         for node in self.hadoop_data_nodes():
             if str(node.title).split(':')[0] == node_name:
-                node.hbase_device_id = hbase_device.id
+                node.hbase_device_id = hbase_device.manageIp
                 node.index_object()
 
     def getHBaseAutodiscover(self):
@@ -173,7 +178,7 @@ class HadoopDataNodeInfo(ComponentInfo):
     def hbase_device(self):
         dev_id = self._object.hbase_device_id
         if dev_id:
-            obj = self._object.findDeviceByIdExact(dev_id)
+            obj = self._object.findDeviceByIdOrIp(dev_id)
             if obj:
                 return '<a href="{}">{}</a>'.format(
                             obj.getPrimaryUrlPath(),
