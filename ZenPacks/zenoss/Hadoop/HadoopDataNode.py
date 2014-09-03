@@ -152,6 +152,15 @@ class HadoopDataNode(HadoopComponent):
     def getHBaseAutodiscover(self):
         return True
 
+    def guest_device(self):
+        '''
+        Return guest device object or None if not found.
+        '''
+        # Search for devices by ID.
+        device = self.findDeviceByIdOrIp(self.hbase_device_id)
+        if device:
+            return device
+
 
 class IHadoopDataNodeInfo(IComponentInfo):
     '''
