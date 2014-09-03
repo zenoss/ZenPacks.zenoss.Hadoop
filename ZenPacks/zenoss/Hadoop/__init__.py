@@ -27,8 +27,8 @@ unused(Globals)
 
 # Categorize zProperties.
 # setzPropertyCategory('zHadoop', 'Hadoop')
-setzPropertyCategory('zHbaseAutodiscover', 'Hadoop')
-setzPropertyCategory('zHbaseDeviceClass', 'Hadoop')
+setzPropertyCategory('zHBaseAutodiscover', 'Hadoop')
+setzPropertyCategory('zHBaseDeviceClass', 'Hadoop')
 setzPropertyCategory('zHadoopScheme', 'Hadoop')
 setzPropertyCategory('zHadoopUsername', 'Hadoop')
 setzPropertyCategory('zHadoopPassword', 'Hadoop')
@@ -142,8 +142,8 @@ class ZenPack(ZenPackBase):
     """
 
     packZProperties = [
-        ('zHbaseAutodiscover', False, 'boolean'),
-        ('zHbaseDeviceClass', '/Server/Linux', 'string'),
+        ('zHBaseAutodiscover', False, 'boolean'),
+        ('zHBaseDeviceClass', '/Server/Linux', 'string'),
         ('zHadoopScheme', 'http', 'scheme'),
         ('zHadoopUsername', '', 'string'),
         ('zHadoopPassword', '', 'string'),

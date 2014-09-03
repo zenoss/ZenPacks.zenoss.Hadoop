@@ -144,5 +144,5 @@ def check_error(error, device_id):
     elif str(error).startswith('404') or str(error).startswith('405') \
             or isinstance(error, ConnectionRefusedError):
         return HadoopException(
-            'The modeling failed due to connection issue. Verify the values of'
+            'The modeling failed due to connection issue. Verify the value of'
             ' zHadoopNameNodePort and re-try')
