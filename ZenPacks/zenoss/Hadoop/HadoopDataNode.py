@@ -189,24 +189,6 @@ class HadoopDataNodeInfo(ComponentInfo):
         return ''
 
 
-# Creating a link from the HBase device overview page.
-def hadoop_node_for_device(device):
-    '''
-    Return Hadoop Data Node for HBase device or None.
-    '''
-    # Hadoop can be on either Windows on Linux device.
-    hadoop_deviceclass = device.getDmdRoot('Devices')
-
-    # Look for HadoopDataNode components within all devices.
-    results = ICatalogTool(hadoop_deviceclass).search(
-        types=(CLASS_NAME['HadoopDataNode'],))
-
-    for brain in results:
-        node = brain.getObject()
-        if node.hbase_device_id == device.id:
-            return node
-
-
 class DeviceLinkProvider(object):
     '''
     Provides a link on the device overview page to the
@@ -216,7 +198,7 @@ class DeviceLinkProvider(object):
         self._device = device
 
     def getExpandedLinks(self):
-        node = hadoop_node_for_device(self._device)
+        node = self._hadoop_node_for_device(self._device)
         if node:
             return ['HBase on Hadoop Data Node: <a href="{}">{}</a> '
                     'in Host: <a href="{}">{}</a>'.format(
@@ -226,3 +208,20 @@ class DeviceLinkProvider(object):
                         node.device().titleOrId()
                     )]
         return []
+
+    @staticmethod
+    def _hadoop_node_for_device(device):
+        '''
+        Return Hadoop Data Node for HBase device or None.
+        '''
+        # Hadoop can be on either Windows on Linux device.
+        hadoop_deviceclass = device.getDmdRoot('Devices')
+
+        # Look for HadoopDataNode components within all devices.
+        results = ICatalogTool(hadoop_deviceclass).search(
+            types=(CLASS_NAME['HadoopDataNode'],))
+
+        for brain in results:
+            node = brain.getObject()
+            if node.hbase_device_id == device.id:
+                return node
