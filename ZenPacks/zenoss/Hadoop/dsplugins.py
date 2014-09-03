@@ -301,7 +301,7 @@ class HadoopHBasePlugin(HadoopPlugin):
             except Exception:
                 continue
             module = DS_TO_RELATION.get('DataNodeMonitor')
-            if Bs0.zHbaseAutodiscover and module:
+            if ds0.zHBaseAutodiscover and module:
                 if ip_ds[ip]:
                     summary = 'HBase was discovered on {} data node'.format(
                         ip_ds[ip].title

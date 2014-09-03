@@ -67,6 +67,15 @@
         factory=".HadoopJobHistory.HadoopJobHistoryInfo"
         />
 
+    <!-- Device Links -->
+    <configure zcml:condition="have zenoss:IExpandedLinkProvider">
+        <subscriber
+            provides='Products.ZenModel.interfaces.IExpandedLinkProvider'
+            for='Products.ZenModel.Device.Device'
+            factory='.HadoopDataNode.DeviceLinkProvider'
+            />
+    </configure>
+
     <!-- Impact -->
     <configure zcml:condition="installed ZenPacks.zenoss.Impact">
         <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
