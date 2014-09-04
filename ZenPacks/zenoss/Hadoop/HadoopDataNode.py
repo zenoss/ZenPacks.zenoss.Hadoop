@@ -223,7 +223,7 @@ class DeviceLinkProvider(object):
         '''
         Return Hadoop Data Node for HBase device or None.
         '''
-        # Hadoop can be on either Windows on Linux device.
+        # Hadoop can be on either Windows or Linux device.
         hadoop_deviceclass = device.getDmdRoot('Devices')
 
         # Look for HadoopDataNode components within all devices.
@@ -232,5 +232,5 @@ class DeviceLinkProvider(object):
 
         for brain in results:
             node = brain.getObject()
-            if node.hbase_device_id == device.id:
+            if node.hbase_device_id == device.manageIp:
                 return node

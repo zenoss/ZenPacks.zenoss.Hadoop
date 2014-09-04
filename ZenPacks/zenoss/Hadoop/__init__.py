@@ -146,7 +146,7 @@ class ZenPack(ZenPackBase):
         ('zHBaseDeviceClass', '/Server/Linux', 'string'),
         ('zHadoopScheme', 'http', 'scheme'),
         ('zHadoopUsername', '', 'string'),
-        ('zHadoopPassword', '', 'string'),
+        ('zHadoopPassword', '', 'password'),
         ('zHadoopNameNodePort', '50070', 'string'),
     ]
 
