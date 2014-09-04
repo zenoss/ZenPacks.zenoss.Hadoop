@@ -114,6 +114,7 @@ class BaseRelationsProvider(object):
                     yield edge(guid(obj), self.guid())
 
     def getEdges(self):
+        device = self._object.device()
         if self.impact_relationships is not None:
             for impact_relationship in self.impact_relationships:
                 for impact in self.impact(impact_relationship):
@@ -121,6 +122,12 @@ class BaseRelationsProvider(object):
 
         if self.impacted_by_relationships is not None:
             for impacted_by_relationship in self.impacted_by_relationships:
+                # Check if zookeeper component is on device and
+                # use it instead 'hadoop host'
+                if impacted_by_relationship == 'hadoop_host' and\
+                        hasattr(device, 'zookeepers') and\
+                        getattr(device, 'zookeepers')():
+                    impacted_by_relationship = 'zookeepers'
                 for impacted_by in self.impacted_by(impacted_by_relationship):
                     yield impacted_by
 
@@ -135,36 +142,52 @@ class BaseTriggers(object):
 # ----------------------------------------------------------------------------
 # Impact relationships
 
-class HadoopDataNodeRelationsProvider(BaseRelationsProvider):
-    impacted_by_relationships = ['hadoop_host']
-    impact_relationships = ['hadoop_host']
-
-
 class HadoopSecondaryNameNodeRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
-    impact_relationships = ['hadoop_host']
 
 
 class HadoopJobTrackerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
-    impact_relationships = ['hadoop_host']
 
 
 class HadoopTaskTrackerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
-    impact_relationships = ['hadoop_host']
 
 
 class HadoopResourceManagerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
-    impact_relationships = ['hadoop_host']
 
 
 class HadoopNodeManagerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
-    impact_relationships = ['hadoop_host']
 
 
 class HadoopJobHistoryRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
-    impact_relationships = ['hadoop_host']
+
+
+class HadoopDataNodeRelationsProvider(BaseRelationsProvider):
+    """
+    Hadoop guest device impact relationships.
+    """
+    impacted_by_relationships = [
+        'hadoop_host',
+        'hadoop_job_history',
+        'hadoop_task_tracker',
+        'hadoop_secondary_name_node',
+        'hadoop_resource_manager',
+        'hadoop_job_tracker'
+    ]
+
+    def getEdges(self):
+        for impact in super(HadoopDataNodeRelationsProvider, self).getEdges():
+            yield impact
+        component = self._object
+        guest = component.guest_device()
+        # Add impact 'hbase guest device' relation for data node
+        if guest:
+            yield edge(self.guid(), guid(guest))
+        # Add impacted by 'node manager' relation for data node
+        for hnm in component.device().hadoop_node_managers():
+            if hnm.title.split(':')[0] == component.title.split(':')[0]:
+                yield edge(guid(hnm), self.guid())

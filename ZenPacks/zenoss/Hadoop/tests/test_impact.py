@@ -101,7 +101,9 @@ class TestImpact(BaseTestCase):
 
         impacts, impacted_by = impacts_for(region_server)
 
-        self.assertTrue('hadoop_test_device' in impacts)
+        self.assertTrue('hadoop_test_device' in impacted_by)
+        self.assertTrue('name_node0' in impacted_by)
+        self.assertTrue('job_tracker0' in impacted_by)
 
     @require_impact
     def test_HadoopSecondaryNameNodeImpacts(self):
@@ -110,7 +112,7 @@ class TestImpact(BaseTestCase):
 
         impacts, impacted_by = impacts_for(region_server)
 
-        self.assertTrue('hadoop_test_device' in impacts)
+        self.assertTrue('hadoop_test_device' in impacted_by)
 
     @require_impact
     def test_HadoopJobTrackerImpacts(self):
@@ -119,4 +121,4 @@ class TestImpact(BaseTestCase):
 
         impacts, impacted_by = impacts_for(region_server)
 
-        self.assertTrue('hadoop_test_device' in impacts)
+        self.assertTrue('hadoop_test_device' in impacted_by)
