@@ -21,13 +21,19 @@
 }}
 
 The <span class="zenpack">ZenPacks.zenoss.Hadoop</span> ZenPack monitors Hadoop clusters 
-via JMX web interface (''JMXJsonServlet'') .
+via JMX web interface (''JMXJsonServlet'') and Python 
+<samp class="ph codeph">twisted.web.client</samp> asynchronous framework.
 
 __TOC__
 
 == Gallery ==
 <gallery widths=250px heights=127px>
+Hadoop Data Nodes.png
+Hadoop Device Graphs.png
+Hadoop Impact.png
+External Impact Relationships.png
 </gallery>
+
 == Features ==
 The features added by this ZenPack can be summarized as follows.
 They are each detailed further below.
@@ -35,11 +41,13 @@ They are each detailed further below.
 * Performance monitoring.
 * Event monitoring.
 * Optional service impact with addition of Zenoss Service Dynamics product.
+* Optional HBase auto discovery.
+
 === Discovery ===
-The following values are discovered through zProperties you provide:
+The following components will be automatically discovered through zProperties you provide:
 ; Hadoop Data Node
 : ''Attributes'': Name, Last Contacted, Health State
-; Hadoop Secondery Name Node
+; Hadoop Secondary Name Node
 : ''Attributes'': Name, Health State
 ; Hadoop Job Tracker
 : ''Attributes'': Name, Health State
@@ -51,7 +59,9 @@ The following values are discovered through zProperties you provide:
 : ''Attributes'': Name, Health State
 ; Hadoop Job History
 : ''Attributes'': Name, Health State
-{{note}} Yarn(Resource Manager, Node Manager, Job History) will be modeled for Hadoop 2* version and MapReduce(Job Tracker, Task Tracker) for early versions accordingly.
+{{note}} Yarn components (Resource Manager, Node Manager, Job History) will be 
+modeled for 2.x version of Hadoop and MapReduce components (Job Tracker, Task Tracker) for previous versions.
+
 === Performance Monitoring ===
 The following metrics will be collected and graphed every 5 minutes by default:
 ; Device (Hadoop Name Node)
@@ -61,7 +71,7 @@ The following metrics will be collected and graphed every 5 minutes by default:
 ; Hadoop Data Node
 : ''Blocks'': Blocks Written, Blocks Read, Blocks Removed
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
-; Hadoop Secondery Name Node
+; Hadoop Secondary Name Node
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
 ; Hadoop Task Tracker
 : ''Tasks'': Tasks Completed, Tasks Failed Timeout, Tasks Failed Ping
@@ -72,7 +82,7 @@ The following metrics will be collected and graphed every 5 minutes by default:
 : ''Performance metrics'': Reduces Running, Maps Running
 ; Hadoop Resource Manager
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
-: ''Nodes'': Active Nodes, Decommissioned Nodes, Lost Nodes  Unhealthy Nodes, Rebooted Nodes
+: ''Nodes'': Active Nodes, Decommissioned Nodes, Lost Nodes Unhealthy Nodes, Rebooted Nodes
 : ''Apps'': Apps Submitted, Apps Pending, Apps Running, Apps Completed
 ; Hadoop Node Manager
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
@@ -81,23 +91,9 @@ The following metrics will be collected and graphed every 5 minutes by default:
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
 
 === Event monitoring ===
-The following events will be triggered with respect to the monitored metrics:
-; Device (Hadoop Name Node)
-: ''Error'': No data received.
-; Hadoop Data Node
-: ''Error'': The node is down.
-; Hadoop Secondery Name Node
-: ''Error'': The node is down.
-; Hadoop Job Tracker
-: ''Error'': The job tracker is down.
-; Hadoop Task Tracker
-: ''Error'': The task tracker is down.
-; Hadoop Resource Manager
-: ''Error'': The resource manager is down.
-; Hadoop Node Manager
-: ''Error'': The node manager is down.
-; Hadoop Job History
-: ''Error'': The job history is down.
+The following events will be triggered:
+* ''Error'': Any of the components is down or not available
+* ''Info'': HBase was discovered on one of the Data Nodes or Name Node
 
 === Service Impact ===
 When combined with the Zenoss Service Dynamics product, this ZenPack adds
@@ -105,39 +101,57 @@ built-in service impact capability for Hadoop. The following service impact
 relationships are automatically added. These will be included in any services
 containing one or more of the explicitly mentioned entities.
 ;Service Impact Relationships
-* Data Node, Secondery Name Node, Job Tracker, Task Tracker, Resource Manager, Node Manager or Job History failure affects related device.
+* Secondary Name Node, Job Tracker, Task Tracker, Resource Manager, Node Manager or Job History failure affects associated Data Node.
+* Secondary Name Node, Job Tracker, Task Tracker, Resource Manager, Node Manager and Job History are affected by hosting Device failure.
+;External Impact Relationships
+* Data Node failure affects associated HBase Region Servers.
+* Secondary Name Node, Job Tracker, Task Tracker, Resource Manager, Node Manager and Job History are affected by ZooKeeper failure.
+
+=== HBase Autodiscover ===
+With a fully deployed Hadoop environment, the HBase Master server can move around to different Hadoop Nodes.
+This ZenPack provides optional discovery of HBase Master Device within Hadoop Data Nodes, which may be
+configured with the help of the following configuration properties:
+* zHBaseAutodiscover
+* zHBaseDeviceClass
+If you checkmark ''zHBaseAutodiscover'' property, every 5 minutes by default each Hadoop Data Node will be probed for hosting HBase Master. 
+In case HBase is found, the HBase device will be created in the Device Class set in ''zHBaseDeviceClass'' with HBase modeler plugins bound.
+If the HBase device was already discovered, but HBase Master moves to a different Node, the device's IP address will be changed to a new one.
+
 == Usage ==
 Use the following steps to start monitoring Hadoop cluster:
 # Select ''Infrastructure'' from the navigation bar.
 # Click the device name in the device list. The device overview page appears.
 # Select ''Configuration Properties'' from the left panel.
-# Set the ''zHadoopUsername'' and ''zHadoopPassword''  to setup access.
-# Set the port number to ''zHadoopNameNodePort'' if it differes from the default one. 
-# Set the ''zHbaseAutodiscover'' to setup discovering Hbase on Hadoop data nodes.
-# Set the device class for discovered HBase to value of ''zHbaseDeviceClass'' if it differes from the default one.
+# Set ''zHadoopUsername'', ''zHadoopPassword'' and select https for ''zHadoopScheme'' if you have Basic access authentication configured on your Hadoop UI instances (otherwise leave ''zHadoopUsername'' and ''zHadoopPassword'' blank).
+# Set ''zHadoopNameNodePort'' if the Name Node UI instance port differs from the default one. 
+# Optionally checkmark ''zHBaseAutodiscover'' to setup discovering Hbase on Hadoop data nodes.
+# Optionally set the device class for discovered HBase device in ''zHBaseDeviceClass'' if it differs from the default one.
 # Navigate to the ''Modeler plugins'' page of the device containing your Hadoop server, add the ''HadoopDataNode'' and ''HadoopServiceNode'' modeler plugins.
+# Select ''Model device'' from the gear menu.
 
 ----
 
 
 Alternatively you can use zenbatchload to add Hadoop monitoring servers from the command line.
 To do this, you must create a text file with hostname, username and password of all the
-servers you want to add. The devices shuld be added under the the tagget machine device class
+servers you want to add. The devices should be added under the target machine device class
 (e.g. '/Devices/Server/Linux' in the example below).
 <syntaxhighlight lang="text">
 /Devices/Server/Linux zCollectorPlugins=['HadoopDataNode', 'HadoopServiceNode']
-<HOST NAME> zHadoopUsername='<USERNAME>', zHadoopPassword='<PASSWORD>'
+<HOST NAME> zHadoopNameNodePort='50070', zHadoopPassword='<PASSWORD>', zHadoopUsername='<USERNAME>', zHadoopScheme='<http(s)>'
 </syntaxhighlight>
 You can then load the Hadoop monitoring servers into Zenoss Core or Resource Manager as devices with the following command.
 <console>
 $ ##i##zenbatchload <filename>
 </console>
+
 == Prerequisites ==
-This ZenPack uses the web UI ports for Hadoop performance monitoring,
+This ZenPack uses the NameNode WebUI port for Hadoop modeling and performance monitoring,
 therefore please make sure that the UI instance is running.
+For more information refer to [http://docs.hortonworks.com/HDPDocuments/HDP1/HDP-1.2.0/bk_reference/content/reference_chap2_1.html HDFS Ports].
 
 == Troubleshooting ==
-Please refer the the Zenoss Service Dynamics documentation if you run into
+Please refer to the Zenoss Service Dynamics documentation if you run into
 any of the following problems:
 * ZenPack will not install
 * Adding a device fails
@@ -146,6 +160,7 @@ any of the following problems:
 If you cannot find the answer in the documentation, then Resource Manager (Service Dynamics)
 users should contact [https://support.zenoss.com Zenoss Customer Support].
 Core users can use the #zenoss IRC channel or the community.zenoss.org forums.
+
 == Installed Items ==
 Installing this ZenPack will add the following items to your Zenoss system.
 ;Modeler Plugins
