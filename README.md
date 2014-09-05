@@ -1,4 +1,5 @@
-ZenPacks.zenoss.Hadoop
-======================
+Zenoss Zenpack for monitoring Hadoop
+========================================
 
-Hadoop monitoring ZenPack for Zenoss
+
+http://www.zenoss.com/

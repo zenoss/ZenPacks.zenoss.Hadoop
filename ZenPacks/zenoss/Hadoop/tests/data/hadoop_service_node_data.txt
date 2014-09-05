@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><configuration>
+<property><!--Loaded from hdfs-default.xml--><name>dfs.secondary.http.address</name><value>0.0.0.0:50090</value></property>
+<property><!--Loaded from mapred-default.xml--><name>mapred.job.tracker.http.address</name><value>192.192.0.0:50030</value></property>
+</configuration>{"beans" : [{"name" : "Hadoop:service=NameNode,name=NameNodeInfo","Version" : "1.0.0-cdh4.6.0, r8e266e052e423af592871e2dfe09d54c03f6a0e8"}]}

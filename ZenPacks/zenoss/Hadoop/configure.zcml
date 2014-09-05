@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser = "http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
+
+    <!-- Browser Resources -->
+    <browser:resourceDirectory
+        name="ZenPacks_zenoss_Hadoop"
+        directory="resources"
+        />
+
+    <!-- JavaScript needed for all Zenoss pages. -->
+    <browser:viewlet
+        name="js-hadoop"
+        paths="/++resource++ZenPacks_zenoss_Hadoop/js/hadoop.js"
+        for="*"
+        weight="10"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+
+
+    <!-- API: Info Adapters -->
+
+    <adapter
+        provides=".HadoopJobTracker.IHadoopJobTrackerInfo"
+        for=".HadoopJobTracker.HadoopJobTracker"
+        factory=".HadoopJobTracker.HadoopJobTrackerInfo"
+        />
+
+    <adapter
+        provides=".HadoopTaskTracker.IHadoopTaskTrackerInfo"
+        for=".HadoopTaskTracker.HadoopTaskTracker"
+        factory=".HadoopTaskTracker.HadoopTaskTrackerInfo"
+        />
+
+    <adapter
+        provides=".HadoopSecondaryNameNode.IHadoopSecondaryNameNodeInfo"
+        for=".HadoopSecondaryNameNode.HadoopSecondaryNameNode"
+        factory=".HadoopSecondaryNameNode.HadoopSecondaryNameNodeInfo"
+        />
+
+    <adapter
+        provides=".HadoopDataNode.IHadoopDataNodeInfo"
+        for=".HadoopDataNode.HadoopDataNode"
+        factory=".HadoopDataNode.HadoopDataNodeInfo"
+        />
+
+    <adapter
+        provides=".HadoopResourceManager.IHadoopResourceManagerInfo"
+        for=".HadoopResourceManager.HadoopResourceManager"
+        factory=".HadoopResourceManager.HadoopResourceManagerInfo"
+        />
+
+    <adapter
+        provides=".HadoopNodeManager.IHadoopNodeManagerInfo"
+        for=".HadoopNodeManager.HadoopNodeManager"
+        factory=".HadoopNodeManager.HadoopNodeManagerInfo"
+        />
+
+    <adapter
+        provides=".HadoopJobHistory.IHadoopJobHistoryInfo"
+        for=".HadoopJobHistory.HadoopJobHistory"
+        factory=".HadoopJobHistory.HadoopJobHistoryInfo"
+        />
+
+    <!-- Device Links -->
+    <configure zcml:condition="have zenoss:IExpandedLinkProvider">
+        <subscriber
+            provides='Products.ZenModel.interfaces.IExpandedLinkProvider'
+            for='Products.ZenModel.Device.Device'
+            factory='.HadoopDataNode.DeviceLinkProvider'
+            />
+    </configure>
+
+    <!-- Impact -->
+    <configure zcml:condition="installed ZenPacks.zenoss.Impact">
+        <include package="ZenPacks.zenoss.Impact" file="meta.zcml"/>
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopDataNode.HadoopDataNode"
+            factory=".impact.HadoopDataNodeRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopSecondaryNameNode.HadoopSecondaryNameNode"
+            factory=".impact.HadoopSecondaryNameNodeRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopJobTracker.HadoopJobTracker"
+            factory=".impact.HadoopJobTrackerRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopTaskTracker.HadoopTaskTracker"
+            factory=".impact.HadoopTaskTrackerRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopResourceManager.HadoopResourceManager"
+            factory=".impact.HadoopResourceManagerRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopNodeManager.HadoopNodeManager"
+            factory=".impact.HadoopNodeManagerRelationsProvider"
+            />
+
+        <subscriber
+            provides="ZenPacks.zenoss.Impact.impactd.interfaces.IRelationshipDataProvider"
+            for=".HadoopJobHistory.HadoopJobHistory"
+            factory=".impact.HadoopJobHistoryRelationsProvider"
+            />
+
+    </configure>
+
+</configure>
+
