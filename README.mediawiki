@@ -46,7 +46,7 @@ They are each detailed further below.
 === Discovery ===
 The following components will be automatically discovered through zProperties you provide:
 ; Hadoop Data Node
-: ''Attributes'': Name, Last Contacted, Health State
+: ''Attributes'': Name, HBase Device, Last Contacted, Health State
 ; Hadoop Secondary Name Node
 : ''Attributes'': Name, Health State
 ; Hadoop Job Tracker
@@ -67,7 +67,7 @@ The following metrics will be collected and graphed every 5 minutes by default:
 ; Device (Hadoop Name Node)
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
 : ''Nodes'': Dead Nodes Count, Live Nodes Count
-: ''Performance metrics'': Threads, Total Files
+: ''Performance metrics'': Threads, Total Files, HDFS: Configured Capacity, DFS Remaining, DFS Used
 ; Hadoop Data Node
 : ''Blocks'': Blocks Written, Blocks Read, Blocks Removed
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
@@ -82,7 +82,7 @@ The following metrics will be collected and graphed every 5 minutes by default:
 : ''Performance metrics'': Reduces Running, Maps Running
 ; Hadoop Resource Manager
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
-: ''Nodes'': Active Nodes, Decommissioned Nodes, Lost Nodes Unhealthy Nodes, Rebooted Nodes
+: ''Nodes'': Active Nodes, Decommissioned Nodes, Lost Nodes, Unhealthy Nodes, Rebooted Nodes
 : ''Apps'': Apps Submitted, Apps Pending, Apps Running, Apps Completed
 ; Hadoop Node Manager
 : ''Heap/Non Heap Memory'': Heap Memory Capacity Bytes, Heap Memory Used Bytes, Non Heap Memory Capacity Bytes, Non Heap Memory Used Bytes
@@ -114,7 +114,7 @@ configured with the help of the following configuration properties:
 * zHBaseAutodiscover
 * zHBaseDeviceClass
 If you checkmark ''zHBaseAutodiscover'' property, every 5 minutes by default each Hadoop Data Node will be probed for hosting HBase Master. 
-In case HBase is found, the HBase device will be created in the Device Class set in ''zHBaseDeviceClass'' with HBase modeler plugins bound.
+In case HBase is found, the HBase device will be created in the Device Class set in ''zHBaseDeviceClass'' (usually /Server/Linux or /Server/Microsoft/Windows) with HBase modeler plugins bound.
 If the HBase device was already discovered, but HBase Master moves to a different Node, the device's IP address will be changed to a new one.
 
 == Usage ==
@@ -124,7 +124,7 @@ Use the following steps to start monitoring Hadoop cluster:
 # Select ''Configuration Properties'' from the left panel.
 # Set ''zHadoopUsername'', ''zHadoopPassword'' and select https for ''zHadoopScheme'' if you have Basic access authentication configured on your Hadoop UI instances (otherwise leave ''zHadoopUsername'' and ''zHadoopPassword'' blank).
 # Set ''zHadoopNameNodePort'' if the Name Node UI instance port differs from the default one. 
-# Optionally checkmark ''zHBaseAutodiscover'' to setup discovering Hbase on Hadoop data nodes.
+# Optionally checkmark ''zHBaseAutodiscover'' to setup discovering HBase on Hadoop data nodes.
 # Optionally set the device class for discovered HBase device in ''zHBaseDeviceClass'' if it differs from the default one.
 # Navigate to the ''Modeler plugins'' page of the device containing your Hadoop server, add the ''HadoopDataNode'' and ''HadoopServiceNode'' modeler plugins.
 # Select ''Model device'' from the gear menu.
@@ -137,8 +137,8 @@ To do this, you must create a text file with hostname, username and password of 
 servers you want to add. The devices should be added under the target machine device class
 (e.g. '/Devices/Server/Linux' in the example below).
 <syntaxhighlight lang="text">
-/Devices/Server/Linux zCollectorPlugins=['HadoopDataNode', 'HadoopServiceNode']
-<HOST NAME> zHadoopNameNodePort='50070', zHadoopPassword='<PASSWORD>', zHadoopUsername='<USERNAME>', zHadoopScheme='<http(s)>'
+/Devices/Server/Linux <HOST NAME or IP>
+zCollectorPlugins=['HadoopDataNode', 'HadoopServiceNode'], HadoopNameNodePort='50070' zHadoopPassword='', zHadoopUsername='', zHadoopScheme='<http(s)>'
 </syntaxhighlight>
 You can then load the Hadoop monitoring servers into Zenoss Core or Resource Manager as devices with the following command.
 <console>
@@ -192,5 +192,9 @@ Installing this ZenPack will add the following items to your Zenoss system.
 |Performance Collector
 |zenpython
 |}
+
+== Changes ==
+;1.0.0
+* Initial release
 
 {{ZenPackFooter}}
