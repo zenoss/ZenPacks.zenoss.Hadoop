@@ -52,6 +52,7 @@ class HadoopPlugin(PythonDataSourcePlugin):
         'zHBaseAutodiscover',
         'zHBaseMasterPort',
         'title',
+        'check_zookeeper',
     )
 
     # A variable to store component ids of added components.
@@ -176,7 +177,8 @@ class HadoopPlugin(PythonDataSourcePlugin):
             return [ObjectMap({
                 "compname": "{}/{}".format(module[0], ds.component),
                 "modname": module[1],
-                'health_state': state
+                'health_state': state,
+                'remodel': ds.check_zookeeper
             })]
         return []
 

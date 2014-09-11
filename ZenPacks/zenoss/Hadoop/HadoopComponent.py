@@ -27,8 +27,19 @@ class HadoopComponent(DeviceComponent, ManagedEntity):
             'name': 'Template',
             'action': 'objTemplates',
             'permissions': (ZEN_CHANGE_DEVICE,),
-            },),
-        },)
+        },),
+    },)
+
+    # remodel component if ZooKeeper added or removed
+    remodel = None
+
+    def check_zookeeper(self):
+        '''
+        Check if ZooKeeper component is on device
+        '''
+        if hasattr(self.hadoop_host(), 'zookeepers') and \
+                getattr(self.hadoop_host(), 'zookeepers')():
+            return True
 
     def getStatus(self):
         return super(HadoopComponent, self).getStatus("/Status")
