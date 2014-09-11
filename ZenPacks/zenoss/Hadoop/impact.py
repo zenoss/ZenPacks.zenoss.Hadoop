@@ -144,26 +144,42 @@ class BaseTriggers(object):
 
 class HadoopSecondaryNameNodeRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_data_nodes']
 
 
 class HadoopJobTrackerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_data_nodes']
 
 
 class HadoopTaskTrackerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_data_nodes']
 
 
 class HadoopResourceManagerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_data_nodes']
 
 
 class HadoopNodeManagerRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
 
+    def getEdges(self):
+        for impact in super(
+            HadoopNodeManagerRelationsProvider, self
+        ).getEdges():
+            yield impact
+        component = self._object
+        # Add impact 'data node' relation for node manager
+        for hdn in component.device().hadoop_data_nodes():
+            if hdn.title.split(':')[0] == component.title.split(':')[0]:
+                yield edge(self.guid(), guid(hdn))
+
 
 class HadoopJobHistoryRelationsProvider(BaseRelationsProvider):
     impacted_by_relationships = ['hadoop_host']
+    impact_relationships = ['hadoop_data_nodes']
 
 
 class HadoopDataNodeRelationsProvider(BaseRelationsProvider):
