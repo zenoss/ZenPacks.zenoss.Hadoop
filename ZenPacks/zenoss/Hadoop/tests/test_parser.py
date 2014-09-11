@@ -23,6 +23,7 @@ class TestParser(BaseTestCase):
         self.ds.points = [self.ds]
         self.ds.datasource = "NameNodeMonitor"
         self.ds.component = 'Component'
+        self.ds.check_zookeeper = True
 
         self.result = load_data('test_data_for_parser.txt')
 
@@ -58,7 +59,8 @@ class TestParser(BaseTestCase):
                 self.ds, 'Normal')
                 ),
             ("[<ObjectMap {'compname': 'hadoop_data_nodes/Component',\n "
-             "'health_state': 'Normal',\n 'modname': 'HadoopDataNode'}>]")
+             "'health_state': 'Normal',\n 'modname': 'HadoopDataNode',\n "
+             "'remodel': True}>]")
         )
 
 
