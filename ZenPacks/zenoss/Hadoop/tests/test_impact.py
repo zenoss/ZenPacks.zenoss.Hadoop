@@ -113,6 +113,7 @@ class TestImpact(BaseTestCase):
         impacts, impacted_by = impacts_for(region_server)
 
         self.assertTrue('hadoop_test_device' in impacted_by)
+        self.assertTrue('data_node0' in impacts)
 
     @require_impact
     def test_HadoopJobTrackerImpacts(self):
@@ -122,3 +123,4 @@ class TestImpact(BaseTestCase):
         impacts, impacted_by = impacts_for(region_server)
 
         self.assertTrue('hadoop_test_device' in impacted_by)
+        self.assertTrue('data_node0' in impacts)
