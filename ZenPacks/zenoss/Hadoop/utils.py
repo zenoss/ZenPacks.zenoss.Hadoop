@@ -131,11 +131,14 @@ def hadoop_headers(accept, username, passwd):
     }
 
 
-def check_error(error, device_id):
+def check_error(error, device_id, key=None):
     '''
     Check if error is instance of OpenSSL.SSL or Connection Error
     and return instance of error with correct message
     '''
+    prefix = 'The Hadoop modeling'
+    if key:
+        prefix = 'The {} monitoring'.format(key)
     if isinstance(error, SSLError):
         return SSLError(
             'Connection lost for {}. HTTPS was not configured'.format(
@@ -144,5 +147,5 @@ def check_error(error, device_id):
     elif str(error).startswith('404') or str(error).startswith('405') \
             or isinstance(error, ConnectionRefusedError):
         return HadoopException(
-            'The modeling failed due to connection issue. Verify the value of'
-            ' zHadoopNameNodePort and re-try')
+            '{} failed due to connection issue. Verify the value of'
+            ' zHadoopNameNodePort and re-try'.format(prefix))
