@@ -7,6 +7,7 @@
 #
 ##############################################################################
 
+import re
 import json
 import logging
 
@@ -103,7 +104,10 @@ class HadoopPlugin(PythonDataSourcePlugin):
                 res['jmx'] = yield getPage(jmx_url, headers=headers)
             except Exception as e:
                 # Add event if can't connect to some node
-                e = check_error(e, ds.device) or e
+                e = check_error(
+                    e, ds.device,
+                    " ".join(re.findall('[A-Z][^A-Z]*', ds.template))
+                ) or e
                 severity = ZenEventClasses.Error
                 summary = str(e)
                 results['maps'].extend(self.add_maps(
