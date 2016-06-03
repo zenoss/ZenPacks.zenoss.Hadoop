@@ -82,12 +82,12 @@ def prep_ip(device, val, data=None):
     if not val:
         return ""
     ip, port = val.rsplit(":", 1)
-    local = ['127.0.0.1', '0.0.0.0', 'localhost.localdomain', 'localhost', '::', '127.0.1.1']
+    local = ['0.0.0.0', 'localhost.localdomain', 'localhost', '::']
     match = re.match('.*\$\{([\w\d\.]+)\}.*', ip)
     if data and match:
         ip = get_attr(match.group(1), data)
 
-    if ip in local:
+    if ip in local or ip.strip().startswith('127'):
         ip = device.manageIp
     return ip + ":" + port
 
