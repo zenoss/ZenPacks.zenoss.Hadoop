@@ -52,6 +52,8 @@ def node_oms(log, device, data, state, result, remodel=False):
 
     for node_name, node_data in nodes.iteritems():
         title = prep_ip(device, node_name + ':' + port)
+        if node_data.get('infoAddr'):
+            title = prep_ip(device, node_data.get('infoAddr'))
         log.debug(node_name)
         node_id = dev_id + NAME_SPLITTER + title.split(':')[0]
         # Do not update 'last_contacted' property on remodeling
@@ -79,8 +81,8 @@ def prep_ip(device, val, data=None):
     """
     if not val:
         return ""
-    ip, port = val.split(":")
-    local = ['127.0.0.1', '0.0.0.0', 'localhost.localdomain', 'localhost']
+    ip, port = val.rsplit(":", 1)
+    local = ['127.0.0.1', '0.0.0.0', 'localhost.localdomain', 'localhost', '::', '127.0.1.1']
     match = re.match('.*\$\{([\w\d\.]+)\}.*', ip)
     if data and match:
         ip = get_attr(match.group(1), data)
