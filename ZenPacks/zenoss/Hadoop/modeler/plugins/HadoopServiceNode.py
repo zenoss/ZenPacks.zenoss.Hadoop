@@ -91,22 +91,28 @@ class HadoopServiceNode(PythonPlugin):
             host=device.manageIp,
             endpoint='/conf'
         )
-        headers = hadoop_headers(
+        headers_json = hadoop_headers(
             accept='application/json',
             username=device.zHadoopUsername,
             passwd=device.zHadoopPassword
         )
 
+        headers_xml = hadoop_headers(
+            accept='application/xml',
+            username=device.zHadoopUsername,
+            passwd=device.zHadoopPassword
+        )
+
         try:
-            result['jmx'] = yield getPage(jmx_url, headers=headers)
-            result['conf'] = yield getPage(conf_url, headers=headers)
+            result['jmx'] = yield getPage(jmx_url, headers=headers_json)
+            result['conf'] = yield getPage(conf_url, headers=headers_xml)
         except Exception as e:
             self.on_error(log, device, e)
 
         try:
             rm_url = self._res_mgr_url(device, result['conf'])
             if rm_url:
-                result['rm_jmx'] = yield getPage(rm_url, headers=headers)
+                result['rm_jmx'] = yield getPage(rm_url, headers=headers_json)
         except Exception as e:
             log.debug('Unable to collect node managers. Error: {}'.format(e))
 

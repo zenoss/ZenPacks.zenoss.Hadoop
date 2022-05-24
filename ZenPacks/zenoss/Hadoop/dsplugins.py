@@ -91,8 +91,14 @@ class HadoopPlugin(PythonDataSourcePlugin):
                 host=ip,
                 endpoint='/jmx'
             )
-            headers = hadoop_headers(
+            headers_json = hadoop_headers(
                 accept='application/json',
+                username=ds.zHadoopUsername,
+                passwd=ds.zHadoopPassword
+            )
+
+            headers_xml = hadoop_headers(
+                accept='application/xml',
                 username=ds.zHadoopUsername,
                 passwd=ds.zHadoopPassword
             )
@@ -100,8 +106,8 @@ class HadoopPlugin(PythonDataSourcePlugin):
             res = {}
             try:
                 if ds.datasource == 'NameNodeMonitor':
-                    res['conf'] = yield getPage(conf_url, headers=headers)
-                res['jmx'] = yield getPage(jmx_url, headers=headers)
+                    res['conf'] = yield getPage(conf_url, headers=headers_xml)
+                res['jmx'] = yield getPage(jmx_url, headers=headers_json)
             except Exception as e:
                 # Add event if can't connect to some node
                 e = check_error(
