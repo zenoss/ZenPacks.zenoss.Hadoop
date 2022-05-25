@@ -51,16 +51,22 @@ class HadoopDataNode(PythonPlugin):
             host=device.manageIp,
             endpoint='/conf'
         )
-        headers = hadoop_headers(
+        headers_json = hadoop_headers(
             accept='application/json',
+            username=device.zHadoopUsername,
+            passwd=device.zHadoopPassword
+        )
+
+        headers_xml = hadoop_headers(
+            accept='application/xml',
             username=device.zHadoopUsername,
             passwd=device.zHadoopPassword
         )
 
         result = {}
         try:
-            result['jmx'] = yield getPage(jmx_url, headers=headers)
-            result['conf'] = yield getPage(conf_url, headers=headers)
+            result['jmx'] = yield getPage(jmx_url, headers=headers_json)
+            result['conf'] = yield getPage(conf_url, headers=headers_xml)
         except Exception, e:
             self.on_error(log, device, e)
         self.on_success(log, device)
